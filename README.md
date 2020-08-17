@@ -7,6 +7,6 @@ modified to suit Genrep needs.
 
 Currently, the languages with internal style guides are:
 
-- C++
+- [C++](https://github.com/Genrep-Software/style-guides/blob/master/c++/cppguide.md)
 
 

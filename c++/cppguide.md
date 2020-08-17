@@ -1,20 +1,14 @@
-::: {#content}
-Genrep C++ Style Guide
-======================
+# Genrep C++ Style Guide
 
-::: {#tocDiv .horizontal_toc}
-:::
+## Background
 
-Background {#Background .ignoreLink}
-----------
-
-C++ is one of the main development languages used by many of Genrep\'s
+C++ is one of the main development languages used by many of Genrep's
 open-source projects. As every C++ programmer knows, the language has
 many powerful features, but this power brings with it complexity, which
 in turn can make code more bug-prone and harder to read and maintain.
 
 The goal of this guide is to manage this complexity by describing in
-detail the dos and don\'ts of writing C++ code . These rules exist to
+detail the dos and don'ts of writing C++ code . These rules exist to
 keep the code base manageable while still allowing coders to use C++
 language features productively.
 
@@ -28,7 +22,7 @@ requirements in this guide.
 Note that this guide is not a C++ tutorial: we assume that the reader is
 familiar with the language.
 
-### Goals of the Style Guide {#Goals}
+### Goals of the Style Guide
 
 Why do we have this document?
 
@@ -44,63 +38,59 @@ guide.
 
 The goals of the style guide as we currently see them are as follows:
 
-Style rules should pull their weight
-:   The benefit of a style rule must be large enough to justify asking
+  - Style rules should pull their weight
+    The benefit of a style rule must be large enough to justify asking
     all of our engineers to remember it. The benefit is measured
     relative to the codebase we would get without the rule, so a rule
     against a very harmful practice may still have a small benefit if
     people are unlikely to do it anyway. This principle mostly explains
-    the rules we don't have, rather than the rules we do: for example,
+    the rules we don’t have, rather than the rules we do: for example,
     `goto` contravenes many of the following principles, but is already
-    vanishingly rare, so the Style Guide doesn't discuss it.
-
-Optimize for the reader, not the writer
-:   Our codebase (and most individual components submitted to it) is
+    vanishingly rare, so the Style Guide doesn’t discuss it.
+  - Optimize for the reader, not the writer
+    Our codebase (and most individual components submitted to it) is
     expected to continue for quite some time. As a result, more time
     will be spent reading most of our code than writing it. We
     explicitly choose to optimize for the experience of our average
     software engineer reading, maintaining, and debugging code in our
-    codebase rather than ease when writing said code. \"Leave a trace
-    for the reader\" is a particularly common sub-point of this
-    principle: When something surprising or unusual is happening in a
-    snippet of code (for example, transfer of pointer ownership),
-    leaving textual hints for the reader at the point of use is valuable
+    codebase rather than ease when writing said code. "Leave a trace for
+    the reader" is a particularly common sub-point of this principle:
+    When something surprising or unusual is happening in a snippet of
+    code (for example, transfer of pointer ownership), leaving textual
+    hints for the reader at the point of use is valuable
     (`std::unique_ptr` demonstrates the ownership transfer unambiguously
     at the call site).
-
-Be consistent with existing code
-:   Using one style consistently through our codebase lets us focus on
+  - Be consistent with existing code
+    Using one style consistently through our codebase lets us focus on
     other (more important) issues. Consistency also allows for
     automation: tools that format your code or adjust your `#include`s
     only work properly when your code is consistent with the
     expectations of the tooling. In many cases, rules that are
-    attributed to \"Be Consistent\" boil down to \"Just pick one and
-    stop worrying about it\"; the potential value of allowing
-    flexibility on these points is outweighed by the cost of having
-    people argue over them.
-
-Be consistent with the broader C++ community when appropriate
-:   Consistency with the way other organizations use C++ has value for
+    attributed to "Be Consistent" boil down to "Just pick one and stop
+    worrying about it"; the potential value of allowing flexibility on
+    these points is outweighed by the cost of having people argue over
+    them.
+  - Be consistent with the broader C++ community when appropriate
+    Consistency with the way other organizations use C++ has value for
     the same reasons as consistency within our code base. If a feature
     in the C++ standard solves a problem, or if some idiom is widely
-    known and accepted, that\'s an argument for using it. However,
+    known and accepted, that's an argument for using it. However,
     sometimes standard features and idioms are flawed, or were just
-    designed without our codebase\'s needs in mind. In those cases (as
-    described below) it\'s appropriate to constrain or ban standard
+    designed without our codebase's needs in mind. In those cases (as
+    described below) it's appropriate to constrain or ban standard
     features. In some cases we prefer a homegrown or third-party library
     over a library defined in the C++ Standard, either out of perceived
     superiority or insufficient value to transition the codebase to the
     standard interface.
-
-Avoid surprising or dangerous constructs
-:   C++ has features that are more surprising or dangerous than one
+  - Avoid surprising or dangerous constructs
+    C++ has features that are more surprising or dangerous than one
     might think at a glance. Some style guide restrictions are in place
     to prevent falling into these pitfalls. There is a high bar for
     style guide waivers on such restrictions, because waiving such rules
     often directly risks compromising program correctness.
-
-Avoid constructs that our average C++ programmer would find tricky or hard to maintain
-:   C++ has features that may not be generally appropriate because of
+  - Avoid constructs that our average C++ programmer would find tricky
+    or hard to maintain
+    C++ has features that may not be generally appropriate because of
     the complexity they introduce to the code. In widely used code, it
     may be more acceptable to use trickier language constructs, because
     any benefits of more complex implementation are multiplied widely by
@@ -112,17 +102,15 @@ Avoid constructs that our average C++ programmer would find tricky or hard to ma
     if everyone that works with some piece of code currently understands
     it, such understanding is not guaranteed to hold a few years from
     now.
-
-Be mindful of our scale
-:   With a codebase of 100+ million lines and thousands of engineers,
+  - Be mindful of our scale
+    With a codebase of 100+ million lines and thousands of engineers,
     some mistakes and simplifications for one engineer can become costly
-    for many. For instance it\'s particularly important to avoid
+    for many. For instance it's particularly important to avoid
     polluting the global namespace: name collisions across a codebase of
     hundreds of millions of lines are difficult to work with and hard to
     avoid if everyone puts things into the global namespace.
-
-Concede to optimization when necessary
-:   Performance optimizations can sometimes be necessary and
+  - Concede to optimization when necessary
+    Performance optimizations can sometimes be necessary and
     appropriate, even when they conflict with the other principles of
     this document.
 
@@ -133,10 +121,9 @@ the entire Genrep C++ community, not just your personal preferences or
 those of your team. Be skeptical about and reluctant to use clever or
 unusual constructs: the absence of a prohibition is not the same as a
 license to proceed. Use your judgment, and if you are unsure, please
-don\'t hesitate to ask your project leads to get additional input.
+don't hesitate to ask your project leads to get additional input.
 
-C++ Version {#C++_Version}
------------
+## C++ Version {\#C++\_Version}
 
 Currently, code should target C++17, i.e., should not use C++2x
 features. The C++ version targeted by this guide will advance
@@ -144,15 +131,10 @@ features. The C++ version targeted by this guide will advance
 
 Do not use [non-standard extensions](#Nonstandard_Extensions).
 
-<div>
-
 Consider portability to other environments before using features from
 C++14 and C++17 in your project.
 
-</div>
-
-Header Files {#Header_Files}
-------------
+## Header Files
 
 In general, every `.cc` file should have an associated `.h` file. There
 are some common exceptions, such as unit tests and small `.cc` files
@@ -164,9 +146,9 @@ readability, size and performance of your code.
 The following rules will guide you through the various pitfalls of using
 header files.
 
-[]{#The_-inl.h_Files}
+<span id="The_-inl.h_Files"></span>
 
-### Self-contained Headers {#Self_contained_Headers}
+### Self-contained Headers
 
 Header files should be self-contained (compile on their own) and end in
 `.h`. Non-header files that are meant for inclusion should end in `.inc`
@@ -198,93 +180,91 @@ locations, such as the middle of another file. They might not use
 prerequisites. Name such files with the `.inc` extension. Use sparingly,
 and prefer self-contained headers when possible.
 
-### The \#define Guard {#The__define_Guard}
+### The \#define Guard
 
 All header files should have `#define` guards to prevent multiple
 inclusion. The format of the symbol name should be
 `<PROJECT>_<PATH>_<FILE>_H_`.
 
-<div>
-
 To guarantee uniqueness, they should be based on the full path in a
-project\'s source tree. For example, the file `foo/src/bar/baz.h` in
+project's source tree. For example, the file `foo/src/bar/baz.h` in
 project `foo` should have the following guard:
 
-</div>
+``` cpp
+#ifndef FOO_BAR_BAZ_H_
+#define FOO_BAR_BAZ_H_
 
-    #ifndef FOO_BAR_BAZ_H_
-    #define FOO_BAR_BAZ_H_
+...
 
-    ...
+#endif  // FOO_BAR_BAZ_H_
+```
 
-    #endif  // FOO_BAR_BAZ_H_
-
-### Forward Declarations {#Forward_Declarations}
+### Forward Declarations
 
 Avoid using forward declarations where possible. Instead, `#include` the
 headers you need.
 
-A \"forward declaration\" is a declaration of a class, function, or
+A "forward declaration" is a declaration of a class, function, or
 template without an associated definition.
 
--   Forward declarations can save compile time, as `#include`s force the
+  - Forward declarations can save compile time, as `#include`s force the
     compiler to open more files and process more input.
--   Forward declarations can save on unnecessary recompilation.
+  - Forward declarations can save on unnecessary recompilation.
     `#include`s can force your code to be recompiled more often, due to
     unrelated changes in the header.
 
-```{=html}
 <!-- -->
-```
--   Forward declarations can hide a dependency, allowing user code to
+
+  - Forward declarations can hide a dependency, allowing user code to
     skip necessary recompilation when headers change.
 
--   A forward declaration may be broken by subsequent changes to the
+  - A forward declaration may be broken by subsequent changes to the
     library. Forward declarations of functions and templates can prevent
     the header owners from making otherwise-compatible changes to their
     APIs, such as widening a parameter type, adding a template parameter
     with a default value, or migrating to a new namespace.
 
--   Forward declaring symbols from namespace `std::` yields undefined
+  - Forward declaring symbols from namespace `std::` yields undefined
     behavior.
 
--   It can be difficult to determine whether a forward declaration or a
+  - It can be difficult to determine whether a forward declaration or a
     full `#include` is needed. Replacing an `#include` with a forward
     declaration can silently change the meaning of code:
 
-        // b.h:
-        struct B {};
-        struct D : B {};
+    ``` cpp
+    // b.h:
+    struct B {};
+    struct D : B {};
 
-        // good_user.cc:
-        #include "b.h"
-        void f(B*);
-        void f(void*);
-        void test(D* x) { f(x); }  // calls f(B*)
+    // good_user.cc:
+    #include "b.h"
+    void f(B*);
+    void f(void*);
+    void test(D* x) { f(x); }  // calls f(B*)
+    ```
 
     If the `#include` was replaced with forward decls for `B` and `D`,
     `test()` would call `f(void*)`.
 
--   Forward declaring multiple symbols from a header can be more verbose
+  - Forward declaring multiple symbols from a header can be more verbose
     than simply `#include`ing the header.
 
--   Structuring code to enable forward declarations (e.g., using pointer
+  - Structuring code to enable forward declarations (e.g., using pointer
     members instead of object members) can make the code slower and more
     complex.
 
-```{=html}
 <!-- -->
-```
--   Try to avoid forward declarations of entities defined in another
+
+  - Try to avoid forward declarations of entities defined in another
     project.
--   When using a function declared in a header file, always `#include`
+  - When using a function declared in a header file, always `#include`
     that header.
--   When using a class template, prefer to `#include` its header file.
+  - When using a class template, prefer to `#include` its header file.
 
 Please see [Names and Order of Includes](#Names_and_Order_of_Includes)
 for rules about when to \#include a header.
 
-### Inline Functions {#Inline_Functions}
+### Inline Functions
 
 Define functions inline only when they are small, say, 10 lines or
 fewer.
@@ -298,7 +278,7 @@ the inlined function is small. Feel free to inline accessors and
 mutators, and other short, performance-critical functions.
 
 Overuse of inlining can actually make programs slower. Depending on a
-function\'s size, inlining it can cause the code size to increase or
+function's size, inlining it can cause the code size to increase or
 decrease. Inlining a very small accessor function will usually decrease
 code size while inlining a very large function can dramatically increase
 code size. On modern processors smaller code usually runs faster due to
@@ -306,9 +286,9 @@ better use of the instruction cache.
 
 A decent rule of thumb is to not inline a function if it is more than 10
 lines long. Beware of destructors, which are often longer than they
-appear because of implicit member- and base-destructor calls!
+appear because of implicit member- and base-destructor calls\!
 
-Another useful rule of thumb: it\'s typically not cost effective to
+Another useful rule of thumb: it's typically not cost effective to
 inline functions with loops or switch statements (unless, in the common
 case, the loop or switch statement is never executed).
 
@@ -319,18 +299,20 @@ inline. The main reason for making a virtual function inline is to place
 its definition in the class, either for convenience or to document its
 behavior, e.g., for accessors and mutators.
 
-### Names and Order of Includes {#Names_and_Order_of_Includes}
+### Names and Order of Includes
 
 Include headers in the following order: Related header, C system
-headers, C++ standard library headers, other libraries\' headers, your
-project\'s headers.
+headers, C++ standard library headers, other libraries' headers, your
+project's headers.
 
-All of a project\'s header files should be listed as descendants of the
-project\'s source directory without use of UNIX directory aliases `.`
+All of a project's header files should be listed as descendants of the
+project's source directory without use of UNIX directory aliases `.`
 (the current directory) or `..` (the parent directory). For example,
 `google-awesome-project/src/base/logging.h` should be included as:
 
-    #include "base/logging.h"
+``` cpp
+#include "base/logging.h"
+```
 
 In `dir/foo.cc` or `dir/foo_test.cc`, whose main purpose is to implement
 or test the stuff in `dir2/foo2.h`, order your includes as follows:
@@ -343,8 +325,8 @@ or test the stuff in `dir2/foo2.h`, order your includes as follows:
 5.  C++ standard library headers (without file extension), e.g.,
     `<algorithm>`, `<cstddef>`.
 6.  A blank line
-7.  Other libraries\' `.h` files.
-8.  Your project\'s `.h` files.
+7.  Other libraries' `.h` files.
+8.  Your project's `.h` files.
 
 Separate each non-empty group with one blank line.
 
@@ -369,7 +351,7 @@ convenient.
 You should include all the headers that define the symbols you rely
 upon, except in the unusual case of [forward
 declaration](#Forward_Declarations). If you rely on symbols from
-`bar.h`, don\'t count on the fact that you included `foo.h` which
+`bar.h`, don't count on the fact that you included `foo.h` which
 (currently) includes `bar.h`: include `bar.h` yourself, unless `foo.h`
 explicitly demonstrates its intent to provide you the symbols of
 `bar.h`.
@@ -378,17 +360,19 @@ For example, the includes in
 `google-awesome-project/src/foo/internal/fooserver.cc` might look like
 this:
 
-    #include "foo/server/fooserver.h"
+``` cpp
+#include "foo/server/fooserver.h"
 
-    #include <sys/types.h>
-    #include <unistd.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-    #include <string>
-    #include <vector>
+#include <string>
+#include <vector>
 
-    #include "base/basictypes.h"
-    #include "base/commandlineflags.h"
-    #include "foo/server/bar.h"
+#include "base/basictypes.h"
+#include "base/commandlineflags.h"
+#include "foo/server/bar.h"
+```
 
 **Exception:**
 
@@ -396,18 +380,19 @@ Sometimes, system-specific code needs conditional includes. Such code
 can put conditional includes after other includes. Of course, keep your
 system-specific code small and localized. Example:
 
-    #include "foo/public/fooserver.h"
+``` cpp
+#include "foo/public/fooserver.h"
 
-    #include "base/port.h"  // For LANG_CXX11.
+#include "base/port.h"  // For LANG_CXX11.
 
-    #ifdef LANG_CXX11
-    #include <initializer_list>
-    #endif  // LANG_CXX11
+#ifdef LANG_CXX11
+#include <initializer_list>
+#endif  // LANG_CXX11
+```
 
-Scoping {#Scoping}
--------
+## Scoping
 
-### Namespaces {#Namespaces}
+### Namespaces
 
 With few exceptions, place code in a namespace. Namespaces should have
 unique names based on the project name, and possibly its path. Do not
@@ -425,13 +410,13 @@ For example, if two different projects have a class `Foo` in the global
 scope, these symbols may collide at compile time or at runtime. If each
 project places their code in a namespace, `project1::Foo` and
 `project2::Foo` are now distinct symbols that do not collide, and code
-within each project\'s namespace can continue to refer to `Foo` without
+within each project's namespace can continue to refer to `Foo` without
 the prefix.
 
 Inline namespaces automatically place their names in the enclosing
 scope. Consider the following snippet, for example:
 
-``` {.neutralcode}
+``` neutralcode
 namespace outer {
 inline namespace inner {
   void foo();
@@ -446,105 +431,111 @@ compatibility across versions.
 Namespaces can be confusing, because they complicate the mechanics of
 figuring out what definition a name refers to.
 
-Inline namespaces, in particular, can be confusing because names aren\'t
+Inline namespaces, in particular, can be confusing because names aren't
 actually restricted to the namespace where they are declared. They are
 only useful as part of some larger versioning policy.
 
-In some contexts, it\'s necessary to repeatedly refer to symbols by
-their fully-qualified names. For deeply-nested namespaces, this can add
-a lot of clutter.
+In some contexts, it's necessary to repeatedly refer to symbols by their
+fully-qualified names. For deeply-nested namespaces, this can add a lot
+of clutter.
 
 Namespaces should be used as follows:
 
--   Follow the rules on [Namespace Names](#Namespace_Names).
+  - Follow the rules on [Namespace Names](#Namespace_Names).
 
--   Terminate namespaces with comments as shown in the given examples.
+  - Terminate namespaces with comments as shown in the given examples.
 
--   Namespaces wrap the entire source file after includes,
+  - Namespaces wrap the entire source file after includes,
     [gflags](https://gflags.github.io/gflags/) definitions/declarations
     and forward declarations of classes from other namespaces.
 
-        // In the .h file
-        namespace mynamespace {
+    ```cpp
+    // In the .h file
+    namespace mynamespace {
 
-        // All declarations are within the namespace scope.
-        // Notice the lack of indentation.
-        class MyClass {
-         public:
-          ...
-          void Foo();
-        };
+    // All declarations are within the namespace scope.
+    // Notice the lack of indentation.
+    class MyClass {
+     public:
+      ...
+      void Foo();
+    };
 
-        }  // namespace mynamespace
+    }  // namespace mynamespace
 
-        // In the .cc file
-        namespace mynamespace {
+    // In the .cc file
+    namespace mynamespace {
 
-        // Definition of functions is within scope of the namespace.
-        void MyClass::Foo() {
-          ...
-        }
+    // Definition of functions is within scope of the namespace.
+    void MyClass::Foo() {
+      ...
+    }
 
-        }  // namespace mynamespace
+    }  // namespace mynamespace
+    ```
 
     More complex `.cc` files might have additional details, like flags
     or using-declarations.
 
-        #include "a.h"
+    ``` cpp
+    #include "a.h"
 
-        ABSL_FLAG(bool, someflag, false, "dummy flag");
+    ABSL_FLAG(bool, someflag, false, "dummy flag");
 
-        namespace mynamespace {
+    namespace mynamespace {
 
-        using ::foo::Bar;
+    using ::foo::Bar;
 
-        ...code for mynamespace...    // Code goes against the left margin.
+    ...code for mynamespace...    // Code goes against the left margin.
 
-        }  // namespace mynamespace
+    }  // namespace mynamespace
+    ```
 
--   To place generated protocol message code in a namespace, use the
+  - To place generated protocol message code in a namespace, use the
     `package` specifier in the `.proto` file. See [Protocol Buffer
     Packages](https://developers.google.com/protocol-buffers/docs/reference/cpp-generated#package)
     for details.
 
--   Do not declare anything in namespace `std`, including forward
+  - Do not declare anything in namespace `std`, including forward
     declarations of standard library classes. Declaring entities in
     namespace `std` is undefined behavior, i.e., not portable. To
     declare entities from the standard library, include the appropriate
     header file.
 
--   You may not use a *using-directive* to make all names from a
+  - You may not use a *using-directive* to make all names from a
     namespace available.
 
-    ``` {.badcode}
+    ``` cpp
     // Forbidden -- This pollutes the namespace.
     using namespace foo;
     ```
 
--   Do not use *Namespace aliases* at namespace scope in header files
+  - Do not use *Namespace aliases* at namespace scope in header files
     except in explicitly marked internal-only namespaces, because
     anything imported into a namespace in a header file becomes part of
     the public API exported by that file.
 
-        // Shorten access to some commonly used names in .cc files.
-        namespace baz = ::foo::bar::baz;
+    ``` cpp
+    // Shorten access to some commonly used names in .cc files.
+    namespace baz = ::foo::bar::baz;
 
-        // Shorten access to some commonly used names (in a .h file).
-        namespace librarian {
-        namespace impl {  // Internal, not part of the API.
-        namespace sidetable = ::pipeline_diagnostics::sidetable;
-        }  // namespace impl
+    // Shorten access to some commonly used names (in a .h file).
+    namespace librarian {
+    namespace impl {  // Internal, not part of the API.
+    namespace sidetable = ::pipeline_diagnostics::sidetable;
+    }  // namespace impl
 
-        inline void my_inline_function() {
-          // namespace alias local to a function (or method).
-          namespace baz = ::foo::bar::baz;
-          ...
-        }
-        }  // namespace librarian
+    inline void my_inline_function() {
+      // namespace alias local to a function (or method).
+      namespace baz = ::foo::bar::baz;
+      ...
+    }
+    }  // namespace librarian
+    ```
 
--   Do not use inline namespaces.
+  - Do not use inline namespaces.
 
-### Unnamed Namespaces and Static Variables {#Unnamed_Namespaces_and_Static_Variables}
+### Unnamed Namespaces and Static Variables
 
 When definitions in a `.cc` file do not need to be referenced outside
 that file, place them in an unnamed namespace or declare them `static`.
@@ -552,8 +543,8 @@ Do not use either of these constructs in `.h` files.
 
 All declarations can be given internal linkage by placing them in
 unnamed namespaces. Functions and variables can also be given internal
-linkage by declaring them `static`. This means that anything you\'re
-declaring can\'t be accessed from another file. If a different file
+linkage by declaring them `static`. This means that anything you're
+declaring can't be accessed from another file. If a different file
 declares something with the same name, then the two entities are
 completely independent.
 
@@ -564,16 +555,18 @@ does not need to be referenced elsewhere. Do not use internal linkage in
 Format unnamed namespaces like named namespaces. In the terminating
 comment, leave the namespace name empty:
 
-    namespace {
-    ...
-    }  // namespace
+``` cpp
+namespace {
+...
+}  // namespace
+```
 
-### Nonmember, Static Member, and Global Functions {#Nonmember,_Static_Member,_and_Global_Functions}
+### Nonmember, Static Member, and Global Functions {\#Nonmember,\_Static\_Member,\_and\_Global\_Functions}
 
 Prefer placing nonmember functions in a namespace; use completely global
 functions rarely. Do not use a class simply to group static members.
 Static methods of a class should generally be closely related to
-instances of the class or the class\'s static data.
+instances of the class or the class's static data.
 
 Nonmember and static member functions can be useful in some situations.
 Putting nonmember functions in a namespace avoids polluting the global
@@ -594,9 +587,9 @@ If you define a nonmember function and it is only needed in its `.cc`
 file, use [internal linkage](#Unnamed_Namespaces_and_Static_Variables)
 to limit its scope.
 
-### Local Variables {#Local_Variables}
+### Local Variables
 
-Place a function\'s variables in the narrowest scope possible, and
+Place a function's variables in the narrowest scope possible, and
 initialize variables in the declaration.
 
 C++ allows you to declare variables anywhere in a function. We encourage
@@ -606,32 +599,38 @@ declaration and see what type the variable is and what it was
 initialized to. In particular, initialization should be used instead of
 declaration and assignment, e.g.,:
 
-``` {.badcode}
+``` cpp
 int i;
 i = f();      // Bad -- initialization separate from declaration.
 ```
 
-    int j = g();  // Good -- declaration has initialization.
+``` cpp
+int j = g();  // Good -- declaration has initialization.
+```
 
-``` {.badcode}
+``` cpp
 std::vector<int> v;
 v.push_back(1);  // Prefer initializing using brace initialization.
 v.push_back(2);
 ```
 
-    std::vector<int> v = {1, 2};  // Good -- v starts initialized.
+``` cpp
+std::vector<int> v = {1, 2};  // Good -- v starts initialized.
+```
 
 Variables needed for `if`, `while` and `for` statements should normally
 be declared within those statements, so that such variables are confined
 to those scopes. E.g.:
 
-    while (const char* p = strchr(str, '/')) str = p + 1;
+``` cpp
+while (const char* p = strchr(str, '/')) str = p + 1;
+```
 
 There is one caveat: if the variable is an object, its constructor is
 invoked every time it enters scope and is created, and its destructor is
 invoked every time it goes out of scope.
 
-``` {.badcode}
+``` cpp
 // Inefficient implementation:
 for (int i = 0; i < 1000000; ++i) {
   Foo f;  // My ctor and dtor get called 1000000 times each.
@@ -642,12 +641,14 @@ for (int i = 0; i < 1000000; ++i) {
 It may be more efficient to declare such a variable used in a loop
 outside that loop:
 
-    Foo f;  // My ctor and dtor get called once each.
-    for (int i = 0; i < 1000000; ++i) {
-      f.DoSomething(i);
-    }
+``` cpp
+Foo f;  // My ctor and dtor get called once each.
+for (int i = 0; i < 1000000; ++i) {
+  f.DoSomething(i);
+}
+```
 
-### Static and Global Variables {#Static_and_Global_Variables}
+### Static and Global Variables
 
 Objects with [static storage
 duration](http://en.cppreference.com/w/cpp/language/storage_duration#Storage_duration)
@@ -665,26 +666,28 @@ see below for details.
 As a rule of thumb: a global variable satisfies these requirements if
 its declaration, considered in isolation, could be `constexpr`.
 
-Every object has a [storage duration]{.dfn}, which correlates with its
-lifetime. Objects with static storage duration live from the point of
-their initialization until the end of the program. Such objects appear
-as variables at namespace scope (\"global variables\"), as static data
-members of classes, or as function-local variables that are declared
-with the `static` specifier. Function-local static variables are
-initialized when control first passes through their declaration; all
-other objects with static storage duration are initialized as part of
-program start-up. All objects with static storage duration are destroyed
-at program exit (which happens before unjoined threads are terminated).
+Every object has a <span class="dfn">storage duration</span>, which
+correlates with its lifetime. Objects with static storage duration live
+from the point of their initialization until the end of the program.
+Such objects appear as variables at namespace scope ("global
+variables"), as static data members of classes, or as function-local
+variables that are declared with the `static` specifier. Function-local
+static variables are initialized when control first passes through their
+declaration; all other objects with static storage duration are
+initialized as part of program start-up. All objects with static storage
+duration are destroyed at program exit (which happens before unjoined
+threads are terminated).
 
-Initialization may be [dynamic]{.dfn}, which means that something
-non-trivial happens during initialization. (For example, consider a
-constructor that allocates memory, or a variable that is initialized
-with the current process ID.) The other kind of initialization is
-[static]{.dfn} initialization. The two aren\'t quite opposites, though:
-static initialization *always* happens to objects with static storage
-duration (initializing the object either to a given constant or to a
-representation consisting of all bytes set to zero), whereas dynamic
-initialization happens after that, if required.
+Initialization may be <span class="dfn">dynamic</span>, which means that
+something non-trivial happens during initialization. (For example,
+consider a constructor that allocates memory, or a variable that is
+initialized with the current process ID.) The other kind of
+initialization is <span class="dfn">static</span> initialization. The
+two aren't quite opposites, though: static initialization *always*
+happens to objects with static storage duration (initializing the object
+either to a given constant or to a representation consisting of all
+bytes set to zero), whereas dynamic initialization happens after that,
+if required.
 
 Global and static variables are very useful for a large number of
 applications: named constants, auxiliary data structures internal to
@@ -706,27 +709,28 @@ run.
 #### Decision on destruction
 
 When destructors are trivial, their execution is not subject to ordering
-at all (they are effectively not \"run\"); otherwise we are exposed to
-the risk of accessing objects after the end of their lifetime.
-Therefore, we only allow objects with static storage duration if they
-are trivially destructible. Fundamental types (like pointers and `int`)
-are trivially destructible, as are arrays of trivially destructible
-types. Note that variables marked with `constexpr` are trivially
-destructible.
+at all (they are effectively not "run"); otherwise we are exposed to the
+risk of accessing objects after the end of their lifetime. Therefore, we
+only allow objects with static storage duration if they are trivially
+destructible. Fundamental types (like pointers and `int`) are trivially
+destructible, as are arrays of trivially destructible types. Note that
+variables marked with `constexpr` are trivially destructible.
 
-    const int kNum = 10;  // allowed
+``` cpp
+const int kNum = 10;  // allowed
 
-    struct X { int n; };
-    const X kX[] = {{1}, {2}, {3}};  // allowed
+struct X { int n; };
+const X kX[] = {{1}, {2}, {3}};  // allowed
 
-    void foo() {
-      static const char* const kMessages[] = {"hello", "world"};  // allowed
-    }
+void foo() {
+  static const char* const kMessages[] = {"hello", "world"};  // allowed
+}
 
-    // allowed: constexpr guarantees trivial destructor
-    constexpr std::array<int, 3> kArray = {{1, 2, 3}};
+// allowed: constexpr guarantees trivial destructor
+constexpr std::array<int, 3> kArray = {{1, 2, 3}};
+```
 
-``` {.badcode}
+``` cpp
 // bad: non-trivial destructor
 const std::string kFoo = "foo";
 
@@ -751,7 +755,7 @@ Initialization is a more complex topic. This is because we must not only
 consider whether class constructors execute, but we must also consider
 the evaluation of the initializer:
 
-``` {.neutralcode}
+``` neutralcode
 int n = 5;    // fine
 int m = f();  // ? (depends on f)
 Foo x;        // ? (depends on Foo::Foo)
@@ -767,11 +771,13 @@ expression is a constant expression, and if the object is initialized by
 a constructor call, then the constructor must be specified as
 `constexpr`, too:
 
-    struct Foo { constexpr Foo(int) {} };
+``` cpp
+struct Foo { constexpr Foo(int) {} };
 
-    int n = 5;  // fine, 5 is a constant expression
-    Foo x(2);   // fine, 2 is a constant expression and the chosen constructor is constexpr
-    Foo a[] = { Foo(1), Foo(2), Foo(3) };  // fine
+int n = 5;  // fine, 5 is a constant expression
+Foo x(2);   // fine, 2 is a constant expression and the chosen constructor is constexpr
+Foo a[] = { Foo(1), Foo(2), Foo(3) };  // fine
+```
 
 Constant initialization is always allowed. Constant initialization of
 static storage duration variables should be marked with `constexpr` or
@@ -783,7 +789,7 @@ very carefully.
 
 By contrast, the following initializations are problematic:
 
-``` {.badcode}
+``` cpp
 // Some declarations used below.
 time_t time(time_t*);      // not constexpr!
 int f();                   // not constexpr!
@@ -801,25 +807,27 @@ program depends on the sequencing of this initialization with respect to
 all other initializations. Under those restrictions, the ordering of the
 initialization does not make an observable difference. For example:
 
-    int p = getpid();  // allowed, as long as no other static variable
-                       // uses p in its own initialization
+``` cpp
+int p = getpid();  // allowed, as long as no other static variable
+                   // uses p in its own initialization
+```
 
 Dynamic initialization of static local variables is allowed (and
 common).
 
 #### Common patterns
 
--   Global strings: if you require a global or static string constant,
+  - Global strings: if you require a global or static string constant,
     consider using a simple character array, or a char pointer to the
     first element of a string literal. String literals have static
     storage duration already and are usually sufficient.
--   Maps, sets, and other dynamic containers: if you require a static,
+  - Maps, sets, and other dynamic containers: if you require a static,
     fixed collection, such as a set to search against or a lookup table,
     you cannot use the dynamic containers from the standard library as a
     static variable, since they have non-trivial destructors. Instead,
     consider a simple array of trivial types, e.g., an array of arrays
-    of ints (for a \"map from int to int\"), or an array of pairs (e.g.,
-    pairs of `int` and `const     char*`). For small collections, linear
+    of ints (for a "map from int to int"), or an array of pairs (e.g.,
+    pairs of `int` and `const char*`). For small collections, linear
     search is entirely sufficient (and efficient, due to memory
     locality); consider using the facilities from
     [absl/algorithm/container.h](https://github.com/abseil/abseil-cpp/blob/master/absl/algorithm/container.h)
@@ -827,21 +835,21 @@ common).
     sorted order and use a binary search algorithm. If you do really
     prefer a dynamic container from the standard library, consider using
     a function-local static pointer, as described below.
--   Smart pointers (`unique_ptr`, `shared_ptr`): smart pointers execute
+  - Smart pointers (`unique_ptr`, `shared_ptr`): smart pointers execute
     cleanup during destruction and are therefore forbidden. Consider
     whether your use case fits into one of the other patterns described
     in this section. One simple solution is to use a plain pointer to a
     dynamically allocated object and never delete it (see last item).
--   Static variables of custom types: if you require static, constant
+  - Static variables of custom types: if you require static, constant
     data of a type that you need to define yourself, give the type a
     trivial destructor and a `constexpr` constructor.
--   If all else fails, you can create an object dynamically and never
+  - If all else fails, you can create an object dynamically and never
     delete it by using a function-local static pointer or reference
-    (e.g., `static     const auto& impl = *new T(args...);`).
+    (e.g., `static const auto& impl = *new T(args...);`).
 
-### thread\_local Variables {#thread_local}
+### thread\_local Variables
 
-`thread_local` variables that aren\'t declared inside a function must be
+`thread_local` variables that aren't declared inside a function must be
 initialized with a true compile-time constant, and this must be enforced
 by using the
 [`ABSL_CONST_INIT`](https://github.com/abseil/abseil-cpp/blob/master/absl/base/attributes.h)
@@ -851,7 +859,9 @@ thread-local data.
 Starting with C++11, variables can be declared with the `thread_local`
 specifier:
 
-    thread_local Foo foo = ...;
+``` cpp
+thread_local Foo foo = ...;
+```
 
 Such a variable is actually a collection of objects, so that when
 different threads access it, they are actually accessing different
@@ -871,25 +881,24 @@ issues as static variables (and more besides).
 terminates, so they do not have the destruction-order issues of static
 variables.
 
--   Thread-local data is inherently safe from races (because only one
+  - Thread-local data is inherently safe from races (because only one
     thread can ordinarily access it), which makes `thread_local` useful
     for concurrent programming.
--   `thread_local` is the only standard-supported way of creating
+  - `thread_local` is the only standard-supported way of creating
     thread-local data.
 
-```{=html}
 <!-- -->
-```
--   Accessing a `thread_local` variable may trigger execution of an
+
+  - Accessing a `thread_local` variable may trigger execution of an
     unpredictable and uncontrollable amount of other code.
--   `thread_local` variables are effectively global variables, and have
+  - `thread_local` variables are effectively global variables, and have
     all the drawbacks of global variables other than lack of
     thread-safety.
--   The memory consumed by a `thread_local` variable scales with the
+  - The memory consumed by a `thread_local` variable scales with the
     number of running threads (in the worst case), which can be quite
     large in a program.
--   An ordinary class member cannot be `thread_local`.
--   `thread_local` may not be as efficient as certain compiler
+  - An ordinary class member cannot be `thread_local`.
+  - `thread_local` may not be as efficient as certain compiler
     intrinsics.
 
 `thread_local` variables inside a function have no safety concerns, so
@@ -897,10 +906,12 @@ they can be used without restriction. Note that you can use a
 function-scope `thread_local` to simulate a class- or namespace-scope
 `thread_local` by defining a function or static method that exposes it:
 
-    Foo& MyThreadLocalFoo() {
-      thread_local Foo result = ComplicatedInitialization();
-      return result;
-    }
+``` cpp
+Foo& MyThreadLocalFoo() {
+  thread_local Foo result = ComplicatedInitialization();
+  return result;
+}
+```
 
 `thread_local` variables at class or namespace scope must be initialized
 with a true compile-time constant (i.e., they must have no dynamic
@@ -909,47 +920,47 @@ namespace scope must be annotated with
 [`ABSL_CONST_INIT`](https://github.com/abseil/abseil-cpp/blob/master/absl/base/attributes.h)
 (or `constexpr`, but that should be rare):
 
-    ABSL_CONST_INIT thread_local Foo foo = ...;
+``` cpp
+ABSL_CONST_INIT thread_local Foo foo = ...;
+```
 
 `thread_local` should be preferred over other mechanisms for defining
 thread-local data.
 
-Classes {#Classes}
--------
+## Classes
 
 Classes are the fundamental unit of code in C++. Naturally, we use them
-extensively. This section lists the main dos and don\'ts you should
+extensively. This section lists the main dos and don'ts you should
 follow when writing a class.
 
-### Doing Work in Constructors {#Doing_Work_in_Constructors}
+### Doing Work in Constructors
 
 Avoid virtual method calls in constructors, and avoid initialization
-that can fail if you can\'t signal an error.
+that can fail if you can't signal an error.
 
 It is possible to perform arbitrary initialization in the body of the
 constructor.
 
--   No need to worry about whether the class has been initialized or
+  - No need to worry about whether the class has been initialized or
     not.
--   Objects that are fully initialized by constructor call can be
+  - Objects that are fully initialized by constructor call can be
     `const` and may also be easier to use with standard containers or
     algorithms.
 
-```{=html}
 <!-- -->
-```
--   If the work calls virtual functions, these calls will not get
+
+  - If the work calls virtual functions, these calls will not get
     dispatched to the subclass implementations. Future modification to
     your class can quietly introduce this problem even if your class is
     not currently subclassed, causing much confusion.
--   There is no easy way for constructors to signal errors, short of
+  - There is no easy way for constructors to signal errors, short of
     crashing the program (not always appropriate) or using exceptions
     (which are [forbidden](#Exceptions)).
--   If the work fails, we now have an object whose initialization code
-    failed, so it may be an unusual state requiring a `bool   IsValid()`
+  - If the work fails, we now have an object whose initialization code
+    failed, so it may be an unusual state requiring a `bool IsValid()`
     state checking mechanism (or similar) which is easy to forget to
     call.
--   You cannot take the address of a constructor, so whatever work is
+  - You cannot take the address of a constructor, so whatever work is
     done in the constructor cannot easily be handed off to, for example,
     another thread.
 
@@ -961,17 +972,18 @@ methods on objects with no other states that affect which public methods
 may be called (semi-constructed objects of this form are particularly
 hard to work with correctly).
 
-[]{#Explicit_Constructors}
+<span id="Explicit_Constructors"></span>
 
-### Implicit Conversions {#Implicit_Conversions}
+### Implicit Conversions
 
 Do not define implicit conversions. Use the `explicit` keyword for
 conversion operators and single-argument constructors.
 
-Implicit conversions allow an object of one type (called the [source
-type]{.dfn}) to be used where a different type (called the [destination
-type]{.dfn}) is expected, such as when passing an `int` argument to a
-function that takes a `double` parameter.
+Implicit conversions allow an object of one type (called the
+<span class="dfn">source type</span>) to be used where a different type
+(called the <span class="dfn">destination type</span>) is expected, such
+as when passing an `int` argument to a function that takes a `double`
+parameter.
 
 In addition to the implicit conversions defined by the language, users
 can define their own, by adding appropriate members to the class
@@ -985,52 +997,53 @@ value).
 The `explicit` keyword can be applied to a constructor or (since C++11)
 a conversion operator, to ensure that it can only be used when the
 destination type is explicit at the point of use, e.g., with a cast.
-This applies not only to implicit conversions, but to C++11\'s list
+This applies not only to implicit conversions, but to C++11's list
 initialization syntax:
 
-    class Foo {
-      explicit Foo(int x, double y);
-      ...
-    };
+``` cpp
+class Foo {
+  explicit Foo(int x, double y);
+  ...
+};
 
-    void Func(Foo f);
+void Func(Foo f);
+```
 
-``` {.badcode}
+``` cpp
 Func({42, 3.14});  // Error
 ```
 
-This kind of code isn\'t technically an implicit conversion, but the
+This kind of code isn't technically an implicit conversion, but the
 language treats it as one as far as `explicit` is concerned.
 
--   Implicit conversions can make a type more usable and expressive by
-    eliminating the need to explicitly name a type when it\'s obvious.
--   Implicit conversions can be a simpler alternative to overloading,
+  - Implicit conversions can make a type more usable and expressive by
+    eliminating the need to explicitly name a type when it's obvious.
+  - Implicit conversions can be a simpler alternative to overloading,
     such as when a single function with a `string_view` parameter takes
     the place of separate overloads for `std::string` and `const char*`.
--   List initialization syntax is a concise and expressive way of
+  - List initialization syntax is a concise and expressive way of
     initializing objects.
 
-```{=html}
 <!-- -->
-```
--   Implicit conversions can hide type-mismatch bugs, where the
-    destination type does not match the user\'s expectation, or the user
+
+  - Implicit conversions can hide type-mismatch bugs, where the
+    destination type does not match the user's expectation, or the user
     is unaware that any conversion will take place.
--   Implicit conversions can make code harder to read, particularly in
+  - Implicit conversions can make code harder to read, particularly in
     the presence of overloading, by making it less obvious what code is
     actually getting called.
--   Constructors that take a single argument may accidentally be usable
+  - Constructors that take a single argument may accidentally be usable
     as implicit type conversions, even if they are not intended to do
     so.
--   When a single-argument constructor is not marked `explicit`,
-    there\'s no reliable way to tell whether it\'s intended to define an
-    implicit conversion, or the author simply forgot to mark it.
--   Implicit conversions can lead to call-site ambiguities, especially
+  - When a single-argument constructor is not marked `explicit`, there's
+    no reliable way to tell whether it's intended to define an implicit
+    conversion, or the author simply forgot to mark it.
+  - Implicit conversions can lead to call-site ambiguities, especially
     when there are bidirectional implicit conversions. This can be
     caused either by having two types that both provide an implicit
     conversion, or by a single type that has both an implicit
     constructor and an implicit type conversion operator.
--   List initialization can suffer from the same problems if the
+  - List initialization can suffer from the same problems if the
     destination type is implicit, particularly if the list has only a
     single element.
 
@@ -1050,11 +1063,11 @@ Constructors that cannot be called with a single argument may omit
 parameter should also omit `explicit`, in order to support
 copy-initialization (e.g., `MyType m = {1, 2};`).
 
-### Copyable and Movable Types {#Copyable_Movable_Types}
+### Copyable and Movable Types
 
-[]{#Copy_Constructors}
+<span id="Copy_Constructors"></span>
 
-A class\'s public API must make clear whether the class is copyable,
+A class's public API must make clear whether the class is copyable,
 move-only, or neither copyable nor movable. Support copying and/or
 moving if these operations are clear and meaningful for your type.
 
@@ -1081,7 +1094,7 @@ some situations, e.g., when passing objects by value.
 
 Objects of copyable and movable types can be passed and returned by
 value, which makes APIs simpler, safer, and more general. Unlike when
-passing objects by pointer or reference, there\'s no risk of confusion
+passing objects by pointer or reference, there's no risk of confusion
 over ownership, lifetime, mutability, and similar issues, and no need to
 specify them in the contract. It also prevents non-local interactions
 between the client and the implementation, which makes them easier to
@@ -1095,8 +1108,8 @@ define correctly than alternatives like `Clone()`, `CopyFrom()` or
 `Swap()`, because they can be generated by the compiler, either
 implicitly or with `= default`. They are concise, and ensure that all
 data members are copied. Copy and move constructors are also generally
-more efficient, because they don\'t require heap allocation or separate
-initialization and assignment steps, and they\'re eligible for
+more efficient, because they don't require heap allocation or separate
+initialization and assignment steps, and they're eligible for
 optimizations such as [copy
 elision](http://en.cppreference.com/w/cpp/language/copy_elision).
 
@@ -1119,7 +1132,7 @@ easy to miss. This may cause confusion for programmers used to languages
 where pass-by-reference is conventional or mandatory. It may also
 encourage excessive copying, which can cause performance problems.
 
-Every class\'s public interface must make clear which copy and move
+Every class's public interface must make clear which copy and move
 operations the class supports. This should usually take the form of
 explicitly declaring and/or deleting the appropriate operations in the
 `public` section of the declaration.
@@ -1132,50 +1145,52 @@ operations is permitted, but not required. If you provide a copy or move
 assignment operator, you must also provide the corresponding
 constructor.
 
-    class Copyable {
-     public:
-      Copyable(const Copyable& other) = default;
-      Copyable& operator=(const Copyable& other) = default;
+``` cpp
+class Copyable {
+ public:
+  Copyable(const Copyable& other) = default;
+  Copyable& operator=(const Copyable& other) = default;
 
-      // The implicit move operations are suppressed by the declarations above.
-    };
+  // The implicit move operations are suppressed by the declarations above.
+};
 
-    class MoveOnly {
-     public:
-      MoveOnly(MoveOnly&& other);
-      MoveOnly& operator=(MoveOnly&& other);
+class MoveOnly {
+ public:
+  MoveOnly(MoveOnly&& other);
+  MoveOnly& operator=(MoveOnly&& other);
 
-      // The copy operations are implicitly deleted, but you can
-      // spell that out explicitly if you want:
-      MoveOnly(const MoveOnly&) = delete;
-      MoveOnly& operator=(const MoveOnly&) = delete;
-    };
+  // The copy operations are implicitly deleted, but you can
+  // spell that out explicitly if you want:
+  MoveOnly(const MoveOnly&) = delete;
+  MoveOnly& operator=(const MoveOnly&) = delete;
+};
 
-    class NotCopyableOrMovable {
-     public:
-      // Not copyable or movable
-      NotCopyableOrMovable(const NotCopyableOrMovable&) = delete;
-      NotCopyableOrMovable& operator=(const NotCopyableOrMovable&)
-          = delete;
+class NotCopyableOrMovable {
+ public:
+  // Not copyable or movable
+  NotCopyableOrMovable(const NotCopyableOrMovable&) = delete;
+  NotCopyableOrMovable& operator=(const NotCopyableOrMovable&)
+      = delete;
 
-      // The move operations are implicitly disabled, but you can
-      // spell that out explicitly if you want:
-      NotCopyableOrMovable(NotCopyableOrMovable&&) = delete;
-      NotCopyableOrMovable& operator=(NotCopyableOrMovable&&)
-          = delete;
-    };
+  // The move operations are implicitly disabled, but you can
+  // spell that out explicitly if you want:
+  NotCopyableOrMovable(NotCopyableOrMovable&&) = delete;
+  NotCopyableOrMovable& operator=(NotCopyableOrMovable&&)
+      = delete;
+};
+```
 
 These declarations/deletions can be omitted only if they are obvious:
 
--   If the class has no `private` section, like a
+  - If the class has no `private` section, like a
     [struct](#Structs_vs._Classes) or an interface-only base class, then
     the copyability/movability can be determined by the
     copyability/movability of any public data members.
--   If a base class clearly isn\'t copyable or movable, derived classes
-    naturally won\'t be either. An interface-only base class that leaves
+  - If a base class clearly isn't copyable or movable, derived classes
+    naturally won't be either. An interface-only base class that leaves
     these operations implicit is not sufficient to make concrete
     subclasses clear.
--   Note that if you explicitly declare or delete either the constructor
+  - Note that if you explicitly declare or delete either the constructor
     or assignment operation for copy, the other copy operation is not
     obvious and must be declared or deleted. Likewise for move
     operations.
@@ -1191,20 +1206,20 @@ implementation of those operations is correct. Remember to review the
 correctness of any defaulted operations as you would any other code.
 
 Due to the risk of slicing, prefer to avoid providing a public
-assignment operator or copy/move constructor for a class that\'s
-intended to be derived from (and prefer to avoid deriving from a class
-with such members). If your base class needs to be copyable, provide a
-public virtual `Clone()` method, and a protected copy constructor that
-derived classes can use to implement it.
+assignment operator or copy/move constructor for a class that's intended
+to be derived from (and prefer to avoid deriving from a class with such
+members). If your base class needs to be copyable, provide a public
+virtual `Clone()` method, and a protected copy constructor that derived
+classes can use to implement it.
 
-### Structs vs. Classes {#Structs_vs._Classes}
+### Structs vs. Classes
 
 Use a `struct` only for passive objects that carry data; everything else
 is a `class`.
 
 The `struct` and `class` keywords behave almost identically in C++. We
 add our own semantic meanings to each keyword, so you should use the
-appropriate keyword for the data-type you\'re defining.
+appropriate keyword for the data-type you're defining.
 
 `structs` should be used for passive objects that carry data, and may
 have associated constants. All fields must be public. The struct must
@@ -1223,7 +1238,7 @@ metafunctions](#Template_metaprogramming), and some functors.
 Note that member variables in structs and classes have [different naming
 rules](#Variable_Names).
 
-### Structs vs. Pairs and Tuples {#Structs_vs._Tuples}
+### Structs vs. Pairs and Tuples
 
 Prefer to use a `struct` instead of a pair or a tuple whenever the
 elements can have meaningful names.
@@ -1231,7 +1246,7 @@ elements can have meaningful names.
 While using pairs and tuples can avoid the need to define a custom type,
 potentially saving work when *writing* code, a meaningful field name
 will almost always be much clearer when *reading* code than `.first`,
-`.second`, or `std::get<X>`. While C++14\'s introduction of
+`.second`, or `std::get<X>`. While C++14's introduction of
 `std::get<Type>` to access a tuple element by type rather than index
 (when the type is unique) can sometimes partially mitigate this, a field
 name is usually substantially clearer and more informative than a type.
@@ -1240,18 +1255,18 @@ Pairs and tuples may be appropriate in generic code where there are not
 specific meanings for the elements of the pair or tuple. Their use may
 also be required in order to interoperate with existing code or APIs.
 
-[]{#Multiple_Inheritance}
+<span id="Multiple_Inheritance"></span>
 
-### Inheritance {#Inheritance}
+### Inheritance
 
 Composition is often more appropriate than inheritance. When using
 inheritance, make it `public`.
 
 When a sub-class inherits from a base class, it includes the definitions
-of all the data and operations that the base class defines. \"Interface
-inheritance\" is inheritance from a pure abstract base class (one with
-no state or defined methods); all other inheritance is \"implementation
-inheritance\".
+of all the data and operations that the base class defines. "Interface
+inheritance" is inheritance from a pure abstract base class (one with no
+state or defined methods); all other inheritance is "implementation
+inheritance".
 
 Implementation inheritance reduces code size by re-using the base class
 code as it specializes an existing type. Because inheritance is a
@@ -1271,7 +1286,7 @@ Multiple inheritance is especially problematic, because it often imposes
 a higher performance overhead (in fact, the performance drop from single
 inheritance to multiple inheritance can often be greater than the
 performance drop from ordinary to virtual dispatch), and because it
-risks leading to \"diamond\" inheritance patterns, which are prone to
+risks leading to "diamond" inheritance patterns, which are prone to
 ambiguity, confusion, and outright bugs.
 
 All inheritance should be `public`. If you want to do private
@@ -1279,9 +1294,9 @@ inheritance, you should be including an instance of the base class as a
 member instead.
 
 Do not overuse implementation inheritance. Composition is often more
-appropriate. Try to restrict use of inheritance to the \"is-a\" case:
-`Bar` subclasses `Foo` if it can reasonably be said that `Bar` \"is a
-kind of\" `Foo`.
+appropriate. Try to restrict use of inheritance to the "is-a" case:
+`Bar` subclasses `Foo` if it can reasonably be said that `Bar` "is a
+kind of" `Foo`.
 
 Limit the use of `protected` to those member functions that might need
 to be accessed from subclasses. Note that [data members should be
@@ -1300,7 +1315,7 @@ or not.
 Multiple inheritance is permitted, but multiple *implementation*
 inheritance is strongly discouraged.
 
-### Operator Overloading {#Operator_Overloading}
+### Operator Overloading
 
 Overload operators judiciously. Do not use user-defined literals.
 
@@ -1321,41 +1336,40 @@ with libraries that expect those names.
 User-defined literals are a very concise notation for creating objects
 of user-defined types.
 
--   Providing a correct, consistent, and unsurprising set of operator
+  - Providing a correct, consistent, and unsurprising set of operator
     overloads requires some care, and failure to do so can lead to
     confusion and bugs.
--   Overuse of operators can lead to obfuscated code, particularly if
-    the overloaded operator\'s semantics don\'t follow convention.
--   The hazards of function overloading apply just as much to operator
+  - Overuse of operators can lead to obfuscated code, particularly if
+    the overloaded operator's semantics don't follow convention.
+  - The hazards of function overloading apply just as much to operator
     overloading, if not more so.
--   Operator overloads can fool our intuition into thinking that
+  - Operator overloads can fool our intuition into thinking that
     expensive operations are cheap, built-in operations.
--   Finding the call sites for overloaded operators may require a search
-    tool that\'s aware of C++ syntax, rather than e.g., grep.
--   If you get the argument type of an overloaded operator wrong, you
+  - Finding the call sites for overloaded operators may require a search
+    tool that's aware of C++ syntax, rather than e.g., grep.
+  - If you get the argument type of an overloaded operator wrong, you
     may get a different overload rather than a compiler error. For
     example, `foo < bar` may do one thing, while `&foo < &bar` does
     something totally different.
--   Certain operator overloads are inherently hazardous. Overloading
+  - Certain operator overloads are inherently hazardous. Overloading
     unary `&` can cause the same code to have different meanings
     depending on whether the overload declaration is visible. Overloads
     of `&&`, `||`, and `,` (comma) cannot match the evaluation-order
     semantics of the built-in operators.
--   Operators are often defined outside the class, so there\'s a risk of
+  - Operators are often defined outside the class, so there's a risk of
     different files introducing different definitions of the same
     operator. If both definitions are linked into the same binary, this
     results in undefined behavior, which can manifest as subtle run-time
     bugs.
--   User-defined literals (UDLs) allow the creation of new syntactic
+  - User-defined literals (UDLs) allow the creation of new syntactic
     forms that are unfamiliar even to experienced C++ programmers, such
-    as `"Hello World"sv` as a shorthand for
-    `std::string_view("Hello World")`. Existing notations are clearer,
-    though less terse.
--   Because they can\'t be namespace-qualified, uses of UDLs also
-    require use of either using-directives (which [we ban](#Namespaces))
-    or using-declarations (which [we ban in header files](#Aliases)
-    except when the imported names are part of the interface exposed by
-    the header file in question). Given that header files would have to
+    as `"Hello World"sv` as a shorthand for `std::string_view("Hello
+    World")`. Existing notations are clearer, though less terse.
+  - Because they can't be namespace-qualified, uses of UDLs also require
+    use of either using-directives (which [we ban](#Namespaces)) or
+    using-declarations (which [we ban in header files](#Aliases) except
+    when the imported names are part of the interface exposed by the
+    header file in question). Given that header files would have to
     avoid UDL suffixes, we prefer to avoid having conventions for
     literals differ between header files and source files.
 
@@ -1378,13 +1392,13 @@ the same arguments.
 Prefer to define non-modifying binary operators as non-member functions.
 If a binary operator is defined as a class member, implicit conversions
 will apply to the right-hand argument, but not the left-hand one. It
-will confuse your users if `a < b` compiles but `b < a` doesn\'t.
+will confuse your users if `a < b` compiles but `b < a` doesn't.
 
-Don\'t go out of your way to avoid defining operator overloads. For
+Don't go out of your way to avoid defining operator overloads. For
 example, prefer to define `==`, `=`, and `<<`, rather than `Equals()`,
-`CopyFrom()`, and `PrintTo()`. Conversely, don\'t define operator
+`CopyFrom()`, and `PrintTo()`. Conversely, don't define operator
 overloads just because other libraries expect them. For example, if your
-type doesn\'t have a natural ordering, but you want to store it in a
+type doesn't have a natural ordering, but you want to store it in a
 `std::set`, use a custom comparator rather than overloading `<`.
 
 Do not overload `&&`, `||`, `,` (comma), or unary `&`. Do not overload
@@ -1398,9 +1412,9 @@ use with streams is covered in the section on [streams](#Streams). See
 also the rules on [function overloading](#Function_Overloading), which
 apply to operator overloading as well.
 
-### Access Control {#Access_Control}
+### Access Control
 
-Make classes\' data members `private`, unless they are
+Make classes' data members `private`, unless they are
 [constants](#Constant_Names). This simplifies reasoning about
 invariants, at the cost of some easy boilerplate in the form of
 accessors (usually `const`) if necessary.
@@ -1411,7 +1425,7 @@ Test](https://github.com/google/googletest)). If a test fixture class is
 defined outside of the .cc file it is used in, for example in a .h file,
 make data members `private`.
 
-### Declaration Order {#Declaration_Order}
+### Declaration Order
 
 Group similar declarations together, placing public parts earlier.
 
@@ -1430,12 +1444,12 @@ Usually, only trivial or performance-critical, and very short, methods
 may be defined inline. See [Inline Functions](#Inline_Functions) for
 more details.
 
-Functions {#Functions}
----------
+## Functions
 
-[]{#Function_Parameter_Ordering} []{#Output_Parameters}
+<span id="Function_Parameter_Ordering"></span>
+<span id="Output_Parameters"></span>
 
-### Inputs and Outputs {#Inputs_and_Outputs}
+### Inputs and Outputs
 
 The output of a C++ function is naturally provided via a return value
 and sometimes via output parameters (or in/out parameters).
@@ -1465,7 +1479,7 @@ as always, consistency with related functions may require you to bend
 the rule. Variadic functions may also require unusual parameter
 ordering.
 
-### Write Short Functions {#Write_Short_Functions}
+### Write Short Functions
 
 Prefer small and focused functions.
 
@@ -1487,7 +1501,7 @@ debug, or you want to use a piece of it in several different contexts,
 consider breaking up the function into smaller and more manageable
 pieces.
 
-### Function Overloading {#Function_Overloading}
+### Function Overloading
 
 Use overloaded functions (including constructors) only if a reader
 looking at a call site can get a good idea of what is happening without
@@ -1497,11 +1511,13 @@ You may write a function that takes a `const std::string&` and overload
 it with another that takes `const char*`. However, in this case consider
 std::string\_view instead.
 
-    class MyClass {
-     public:
-      void Analyze(const std::string &text);
-      void Analyze(const char *text, size_t textlen);
-    };
+``` cpp
+class MyClass {
+ public:
+  void Analyze(const std::string &text);
+  void Analyze(const char *text, size_t textlen);
+};
+```
 
 Overloading can make code more intuitive by allowing an
 identically-named function to take different arguments. It may be
@@ -1512,10 +1528,9 @@ more usable, more efficient, or both. (See [TotW
 148](http://abseil.io/tips/148) for more.)
 
 If a function is overloaded by the argument types alone, a reader may
-have to understand C++\'s complex matching rules in order to tell
-what\'s going on. Also many people are confused by the semantics of
-inheritance if a derived class overrides only some of the variants of a
-function.
+have to understand C++'s complex matching rules in order to tell what's
+going on. Also many people are confused by the semantics of inheritance
+if a derived class overrides only some of the variants of a function.
 
 You may overload a function when there are no semantic differences
 between variants. These overloads may vary in types, qualifiers, or
@@ -1525,47 +1540,47 @@ the set is being called. If you can document all entries in the overload
 set with a single comment in the header, that is a good sign that it is
 a well-designed overload set.
 
-### Default Arguments {#Default_Arguments}
+### Default Arguments
 
 Default arguments are allowed on non-virtual functions when the default
 is guaranteed to always have the same value. Follow the same
 restrictions as for [function overloading](#Function_Overloading), and
 prefer overloaded functions if the readability gained with default
-arguments doesn\'t outweigh the downsides below.
+arguments doesn't outweigh the downsides below.
 
 Often you have a function that uses default values, but occasionally you
 want to override the defaults. Default parameters allow an easy way to
 do this without having to define many functions for the rare exceptions.
 Compared to overloading the function, default arguments have a cleaner
 syntax, with less boilerplate and a clearer distinction between
-\'required\' and \'optional\' arguments.
+'required' and 'optional' arguments.
 
 Defaulted arguments are another way to achieve the semantics of
 overloaded functions, so all the [reasons not to overload
 functions](#Function_Overloading) apply.
 
 The defaults for arguments in a virtual function call are determined by
-the static type of the target object, and there\'s no guarantee that all
+the static type of the target object, and there's no guarantee that all
 overrides of a given function declare the same defaults.
 
 Default parameters are re-evaluated at each call site, which can bloat
-the generated code. Readers may also expect the default\'s value to be
+the generated code. Readers may also expect the default's value to be
 fixed at the declaration instead of varying at each call.
 
 Function pointers are confusing in the presence of default arguments,
-since the function signature often doesn\'t match the call signature.
+since the function signature often doesn't match the call signature.
 Adding function overloads avoids these problems.
 
-Default arguments are banned on virtual functions, where they don\'t
-work properly, and in cases where the specified default might not
-evaluate to the same value depending on when it was evaluated. (For
-example, don\'t write `void f(int n = counter++);`.)
+Default arguments are banned on virtual functions, where they don't work
+properly, and in cases where the specified default might not evaluate to
+the same value depending on when it was evaluated. (For example, don't
+write `void f(int n = counter++);`.)
 
 In some other cases, default arguments can improve the readability of
 their function declarations enough to overcome the downsides above, so
 they are allowed. When in doubt, use overloads.
 
-### Trailing Return Type Syntax {#trailing_return}
+### Trailing Return Type Syntax
 
 Use trailing return types only where using the ordinary syntax (leading
 return types) is impractical or much less readable.
@@ -1573,60 +1588,64 @@ return types) is impractical or much less readable.
 C++ allows two different forms of function declarations. In the older
 form, the return type appears before the function name. For example:
 
-    int foo(int x);
+``` cpp
+int foo(int x);
+```
 
 The newer form, introduced in C++11, uses the `auto` keyword before the
 function name and a trailing return type after the argument list. For
 example, the declaration above could equivalently be written:
 
-    auto foo(int x) -> int;
+``` cpp
+auto foo(int x) -> int;
+```
 
-The trailing return type is in the function\'s scope. This doesn\'t make
-a difference for a simple case like `int` but it matters for more
+The trailing return type is in the function's scope. This doesn't make a
+difference for a simple case like `int` but it matters for more
 complicated cases, like types declared in class scope or types written
 in terms of the function parameters.
 
 Trailing return types are the only way to explicitly specify the return
 type of a [lambda expression](#Lambda_expressions). In some cases the
-compiler is able to deduce a lambda\'s return type, but not in all
-cases. Even when the compiler can deduce it automatically, sometimes
-specifying it explicitly would be clearer for readers.
+compiler is able to deduce a lambda's return type, but not in all cases.
+Even when the compiler can deduce it automatically, sometimes specifying
+it explicitly would be clearer for readers.
 
-Sometimes it\'s easier and more readable to specify a return type after
-the function\'s parameter list has already appeared. This is
-particularly true when the return type depends on template parameters.
-For example:
+Sometimes it's easier and more readable to specify a return type after
+the function's parameter list has already appeared. This is particularly
+true when the return type depends on template parameters. For example:
 
-        template <typename T, typename U>
-        auto add(T t, U u) -> decltype(t + u);
-
+```
+    template <typename T, typename U>
+    auto add(T t, U u) -> decltype(t + u);
+```
 
 versus
 
-        template <typename T, typename U>
-        decltype(declval<T&>() + declval<U&>()) add(T t, U u);
-
+```
+    template <typename T, typename U>
+    decltype(declval<T&>() + declval<U&>()) add(T t, U u);
+```
 
 Trailing return type syntax is relatively new and it has no analogue in
 C++-like languages such as C and Java, so some readers may find it
 unfamiliar.
 
 Existing code bases have an enormous number of function declarations
-that aren\'t going to get changed to use the new syntax, so the
-realistic choices are using the old syntax only or using a mixture of
-the two. Using a single version is better for uniformity of style.
+that aren't going to get changed to use the new syntax, so the realistic
+choices are using the old syntax only or using a mixture of the two.
+Using a single version is better for uniformity of style.
 
 In most cases, continue to use the older style of function declaration
 where the return type goes before the function name. Use the new
-trailing-return-type form only in cases where it\'s required (such as
-lambdas) or where, by putting the type after the function\'s parameter
+trailing-return-type form only in cases where it's required (such as
+lambdas) or where, by putting the type after the function's parameter
 list, it allows you to write the type in a much more readable way. The
-latter case should be rare; it\'s mostly an issue in fairly complicated
+latter case should be rare; it's mostly an issue in fairly complicated
 template code, which is [discouraged in most
 cases](#Template_metaprogramming).
 
-Google-Specific Magic {#Google-Specific_Magic}
----------------------
+## Google-Specific Magic
 
 <div>
 
@@ -1636,12 +1655,12 @@ elsewhere.
 
 </div>
 
-### Ownership and Smart Pointers {#Ownership_and_Smart_Pointers}
+### Ownership and Smart Pointers
 
 Prefer to have single, fixed owners for dynamically allocated objects.
 Prefer to transfer ownership with smart pointers.
 
-\"Ownership\" is a bookkeeping technique for managing dynamically
+"Ownership" is a bookkeeping technique for managing dynamically
 allocated memory (and other resources). The owner of a dynamically
 allocated object is an object or function that is responsible for
 ensuring that it is deleted when no longer needed. Ownership can
@@ -1649,7 +1668,7 @@ sometimes be shared, in which case the last owner is typically
 responsible for deleting it. Even when ownership is not shared, it can
 be transferred from one piece of code to another.
 
-\"Smart\" pointers are classes that act like pointers, e.g., by
+"Smart" pointers are classes that act like pointers, e.g., by
 overloading the `*` and `->` operators. Some smart pointer types can be
 used to automate ownership bookkeeping, to ensure these responsibilities
 are met.
@@ -1664,45 +1683,44 @@ allocated object. `std::shared_ptr`s can be copied; ownership of the
 object is shared among all copies, and the object is deleted when the
 last `std::shared_ptr` is destroyed.
 
--   It\'s virtually impossible to manage dynamically allocated memory
+  - It's virtually impossible to manage dynamically allocated memory
     without some sort of ownership logic.
--   Transferring ownership of an object can be cheaper than copying it
+  - Transferring ownership of an object can be cheaper than copying it
     (if copying it is even possible).
--   Transferring ownership can be simpler than \'borrowing\' a pointer
-    or reference, because it reduces the need to coordinate the lifetime
-    of the object between the two users.
--   Smart pointers can improve readability by making ownership logic
+  - Transferring ownership can be simpler than 'borrowing' a pointer or
+    reference, because it reduces the need to coordinate the lifetime of
+    the object between the two users.
+  - Smart pointers can improve readability by making ownership logic
     explicit, self-documenting, and unambiguous.
--   Smart pointers can eliminate manual ownership bookkeeping,
+  - Smart pointers can eliminate manual ownership bookkeeping,
     simplifying the code and ruling out large classes of errors.
--   For const objects, shared ownership can be a simple and efficient
+  - For const objects, shared ownership can be a simple and efficient
     alternative to deep copying.
 
-```{=html}
 <!-- -->
-```
--   Ownership must be represented and transferred via pointers (whether
+
+  - Ownership must be represented and transferred via pointers (whether
     smart or plain). Pointer semantics are more complicated than value
     semantics, especially in APIs: you have to worry not just about
     ownership, but also aliasing, lifetime, and mutability, among other
     issues.
--   The performance costs of value semantics are often overestimated, so
+  - The performance costs of value semantics are often overestimated, so
     the performance benefits of ownership transfer might not justify the
     readability and complexity costs.
--   APIs that transfer ownership force their clients into a single
+  - APIs that transfer ownership force their clients into a single
     memory management model.
--   Code using smart pointers is less explicit about where the resource
+  - Code using smart pointers is less explicit about where the resource
     releases take place.
--   `std::unique_ptr` expresses ownership transfer using C++11\'s move
+  - `std::unique_ptr` expresses ownership transfer using C++11's move
     semantics, which are relatively new and may confuse some
     programmers.
--   Shared ownership can be a tempting alternative to careful ownership
+  - Shared ownership can be a tempting alternative to careful ownership
     design, obfuscating the design of a system.
--   Shared ownership requires explicit bookkeeping at run-time, which
+  - Shared ownership requires explicit bookkeeping at run-time, which
     can be costly.
--   In some cases (e.g., cyclic references), objects with shared
+  - In some cases (e.g., cyclic references), objects with shared
     ownership may never be deleted.
--   Smart pointers are not perfect substitutes for plain pointers.
+  - Smart pointers are not perfect substitutes for plain pointers.
 
 If dynamic allocation is necessary, prefer to keep ownership with the
 code that allocated it. If other code needs access to the object,
@@ -1710,8 +1728,10 @@ consider passing it a copy, or passing a pointer or reference without
 transferring ownership. Prefer to use `std::unique_ptr` to make
 ownership transfer explicit. For example:
 
-    std::unique_ptr<Foo> FooFactory();
-    void FooConsumer(std::unique_ptr<Foo> ptr);
+``` cpp
+std::unique_ptr<Foo> FooFactory();
+void FooConsumer(std::unique_ptr<Foo> ptr);
+```
 
 Do not design your code to use shared ownership without a very good
 reason. One such reason is to avoid expensive copy operations, but you
@@ -1728,8 +1748,8 @@ Use `cpplint.py` to detect style errors.
 `cpplint.py` is a tool that reads a source file and identifies many
 style errors. It is not perfect, and has both false positives and false
 negatives, but it is still a valuable tool. False positives can be
-ignored by putting `// NOLINT` at the end of the line or
-`// NOLINTNEXTLINE` in the previous line.
+ignored by putting `// NOLINT` at the end of the line or `//
+NOLINTNEXTLINE` in the previous line.
 
 <div>
 
@@ -1741,10 +1761,9 @@ separately.
 
 </div>
 
-Other C++ Features {#Other_C++_Features}
-------------------
+## Other C++ Features {\#Other\_C++\_Features}
 
-### Rvalue References {#Rvalue_references}
+### Rvalue References
 
 Use rvalue references only in certain special cases listed below.
 
@@ -1753,36 +1772,35 @@ temporary objects. The syntax is similar to traditional reference
 syntax. For example, `void f(std::string&& s);` declares a function
 whose argument is an rvalue reference to a std::string.
 
-When the token \'&&\' is applied to an unqualified template argument in
-a function parameter, special template argument deduction rules apply.
+When the token '&&' is applied to an unqualified template argument in a
+function parameter, special template argument deduction rules apply.
 Such a reference is called forwarding reference.
 
--   Defining a move constructor (a constructor taking an rvalue
+  - Defining a move constructor (a constructor taking an rvalue
     reference to the class type) makes it possible to move a value
     instead of copying it. If `v1` is a `std::vector<std::string>`, for
     example, then `auto v2(std::move(v1))` will probably just result in
     some simple pointer manipulation instead of copying a large amount
     of data. In many cases this can result in a major performance
     improvement.
--   Rvalue references make it possible to implement types that are
+  - Rvalue references make it possible to implement types that are
     movable but not copyable, which can be useful for types that have no
     sensible definition of copying but where you might still want to
     pass them as function arguments, put them in containers, etc.
--   `std::move` is necessary to make effective use of some
+  - `std::move` is necessary to make effective use of some
     standard-library types, such as `std::unique_ptr`.
--   [Forwarding references](#Forwarding_references) which use the rvalue
+  - [Forwarding references](#Forwarding_references) which use the rvalue
     reference token, make it possible to write a generic function
     wrapper that forwards its arguments to another function, and works
     whether or not its arguments are temporary objects and/or const.
-    This is called \'perfect forwarding\'.
+    This is called 'perfect forwarding'.
 
-```{=html}
 <!-- -->
-```
--   Rvalue references are not yet widely understood. Rules like
+
+  - Rvalue references are not yet widely understood. Rules like
     reference collapsing and the special deduction rule for forwarding
     references are somewhat obscure.
--   Rvalue references are often misused. Using rvalue references is
+  - Rvalue references are often misused. Using rvalue references is
     counter-intuitive in signatures where the argument is expected to
     have a valid specified state after the function call, or where no
     move operation is performed.
@@ -1790,27 +1808,27 @@ Such a reference is called forwarding reference.
 Do not use rvalue references (or apply the `&&` qualifier to methods),
 except as follows:
 
--   You may use them to define move constructors and move assignment
+  - You may use them to define move constructors and move assignment
     operators (as described in [Copyable and Movable
     Types](#Copyable_Movable_Types)).
--   You may use them to define `&&`-qualified methods that logically
-    \"consume\" `*this`, leaving it in an unusable or empty state. Note
+  - You may use them to define `&&`-qualified methods that logically
+    "consume" `*this`, leaving it in an unusable or empty state. Note
     that this applies only to method qualifiers (which come after the
     closing parenthesis of the function signature); if you want to
-    \"consume\" an ordinary function parameter, prefer to pass it by
+    "consume" an ordinary function parameter, prefer to pass it by
     value.
--   You may use forwarding references in conjunction with
-    `   std::forward`, to support perfect forwarding.
--   You may use them to define pairs of overloads, such as one taking
+  - You may use forwarding references in conjunction with
+    `std::forward`, to support perfect forwarding.
+  - You may use them to define pairs of overloads, such as one taking
     `Foo&&` and the other taking `const Foo&`. Usually the preferred
     solution is just to pass by value, but an overloaded pair of
     functions sometimes yields better performance and is sometimes
     necessary in generic code that needs to support a wide variety of
-    types. As always: if you\'re writing more complicated code for the
+    types. As always: if you're writing more complicated code for the
     sake of performance, make sure you have evidence that it actually
     helps.
 
-### Friends {#Friends}
+### Friends
 
 We allow use of `friend` classes and functions, within reason.
 
@@ -1827,56 +1845,55 @@ In some cases this is better than making a member public when you want
 to give only one other class access to it. However, most classes should
 interact with other classes solely through their public members.
 
-### Exceptions {#Exceptions}
+### Exceptions
 
 We do not use C++ exceptions.
 
--   Exceptions allow higher levels of an application to decide how to
-    handle \"can\'t happen\" failures in deeply nested functions,
-    without the obscuring and error-prone bookkeeping of error codes.
--   Exceptions are used by most other modern languages. Using them in
+  - Exceptions allow higher levels of an application to decide how to
+    handle "can't happen" failures in deeply nested functions, without
+    the obscuring and error-prone bookkeeping of error codes.
+  - Exceptions are used by most other modern languages. Using them in
     C++ would make it more consistent with Python, Java, and the C++
     that others are familiar with.
--   Some third-party C++ libraries use exceptions, and turning them off
+  - Some third-party C++ libraries use exceptions, and turning them off
     internally makes it harder to integrate with those libraries.
--   Exceptions are the only way for a constructor to fail. We can
+  - Exceptions are the only way for a constructor to fail. We can
     simulate this with a factory function or an `Init()` method, but
-    these require heap allocation or a new \"invalid\" state,
+    these require heap allocation or a new "invalid" state,
     respectively.
--   Exceptions are really handy in testing frameworks.
+  - Exceptions are really handy in testing frameworks.
 
-```{=html}
 <!-- -->
-```
--   When you add a `throw` statement to an existing function, you must
+
+  - When you add a `throw` statement to an existing function, you must
     examine all of its transitive callers. Either they must make at
     least the basic exception safety guarantee, or they must never catch
     the exception and be happy with the program terminating as a result.
     For instance, if `f()` calls `g()` calls `h()`, and `h` throws an
     exception that `f` catches, `g` has to be careful or it may not
     clean up properly.
--   More generally, exceptions make the control flow of programs
+  - More generally, exceptions make the control flow of programs
     difficult to evaluate by looking at code: functions may return in
-    places you don\'t expect. This causes maintainability and debugging
+    places you don't expect. This causes maintainability and debugging
     difficulties. You can minimize this cost via some rules on how and
     where exceptions can be used, but at the cost of more that a
     developer needs to know and understand.
--   Exception safety requires both RAII and different coding practices.
+  - Exception safety requires both RAII and different coding practices.
     Lots of supporting machinery is needed to make writing correct
     exception-safe code easy. Further, to avoid requiring readers to
     understand the entire call graph, exception-safe code must isolate
-    logic that writes to persistent state into a \"commit\" phase. This
-    will have both benefits and costs (perhaps where you\'re forced to
+    logic that writes to persistent state into a "commit" phase. This
+    will have both benefits and costs (perhaps where you're forced to
     obfuscate code to isolate the commit). Allowing exceptions would
-    force us to always pay those costs even when they\'re not worth it.
--   Turning on exceptions adds data to each binary produced, increasing
+    force us to always pay those costs even when they're not worth it.
+  - Turning on exceptions adds data to each binary produced, increasing
     compile time (probably slightly) and possibly increasing address
     space pressure.
--   The availability of exceptions may encourage developers to throw
-    them when they are not appropriate or recover from them when it\'s
+  - The availability of exceptions may encourage developers to throw
+    them when they are not appropriate or recover from them when it's
     not safe to do so. For example, invalid user input should not cause
     exceptions to be thrown. We would need to make the style guide even
-    longer to document these restrictions!
+    longer to document these restrictions\!
 
 On their face, the benefits of using exceptions outweigh the costs,
 especially in new projects. However, for existing code, the introduction
@@ -1887,15 +1904,15 @@ most existing C++ code at Google is not prepared to deal with
 exceptions, it is comparatively difficult to adopt new code that
 generates exceptions.
 
-Given that Google\'s existing code is not exception-tolerant, the costs
+Given that Google's existing code is not exception-tolerant, the costs
 of using exceptions are somewhat greater than the costs in a new
-project. The conversion process would be slow and error-prone. We don\'t
+project. The conversion process would be slow and error-prone. We don't
 believe that the available alternatives to exceptions, such as error
 codes and assertions, introduce a significant burden.
 
 Our advice against using exceptions is not predicated on philosophical
-or moral grounds, but practical ones. Because we\'d like to use our
-open-source projects at Google and it\'s difficult to do so if those
+or moral grounds, but practical ones. Because we'd like to use our
+open-source projects at Google and it's difficult to do so if those
 projects use exceptions, we need to advise against exceptions in Google
 open-source projects as well. Things would probably be different if we
 had to do it all over again from scratch.
@@ -1918,22 +1935,21 @@ throw exceptions or not. If an exception escapes from a function marked
 The `noexcept` operator performs a compile-time check that returns true
 if an expression is declared to not throw any exceptions.
 
--   Specifying move constructors as `noexcept` improves performance in
+  - Specifying move constructors as `noexcept` improves performance in
     some cases, e.g., `std::vector<T>::resize()` moves rather than
-    copies the objects if T\'s move constructor is `noexcept`.
--   Specifying `noexcept` on a function can trigger compiler
+    copies the objects if T's move constructor is `noexcept`.
+  - Specifying `noexcept` on a function can trigger compiler
     optimizations in environments where exceptions are enabled, e.g.,
     compiler does not have to generate extra code for stack-unwinding,
     if it knows that no exceptions can be thrown due to a `noexcept`
     specifier.
 
-```{=html}
 <!-- -->
-```
--   In projects following this guide that have exceptions disabled it is
+
+  - In projects following this guide that have exceptions disabled it is
     hard to ensure that `noexcept` specifiers are correct, and hard to
     define what correctness even means.
--   It\'s hard, if not impossible, to undo `noexcept` because it
+  - It's hard, if not impossible, to undo `noexcept` because it
     eliminates a guarantee that callers may be relying on, in ways that
     are hard to detect.
 
@@ -1955,17 +1971,17 @@ move-constructing objects), or on whether allocation can throw (e.g.,
 `absl::default_allocator_is_nothrow` for standard default allocation).
 Note in many cases the only possible cause for an exception is
 allocation failure (we believe move constructors should not throw except
-due to allocation failure), and there are many applications where it's
+due to allocation failure), and there are many applications where it’s
 appropriate to treat memory exhaustion as a fatal error rather than an
 exceptional condition that your program should attempt to recover from.
 Even for other potential failures you should prioritize interface
 simplicity over supporting all possible exception throwing scenarios:
 instead of writing a complicated `noexcept` clause that depends on
 whether a hash function can throw, for example, simply document that
-your component doesn't support hash functions throwing and make it
+your component doesn’t support hash functions throwing and make it
 unconditionally `noexcept`.
 
-### Run-Time Type Information (RTTI) {#Run-Time_Type_Information__RTTI_}
+### Run-Time Type Information (RTTI)
 
 Avoid using Run Time Type Information (RTTI).
 
@@ -1984,13 +2000,15 @@ managing the relationship between objects and their mocks.
 
 RTTI is useful when considering multiple abstract objects. Consider
 
-    bool Base::Equal(Base* other) = 0;
-    bool Derived::Equal(Base* other) {
-      Derived* that = dynamic_cast<Derived*>(other);
-      if (that == nullptr)
-        return false;
-      ...
-    }
+``` cpp
+bool Base::Equal(Base* other) = 0;
+bool Derived::Equal(Base* other) {
+  Derived* that = dynamic_cast<Derived*>(other);
+  if (that == nullptr)
+    return false;
+  ...
+}
+```
 
 Querying the type of an object at run-time frequently means a design
 problem. Needing to know the type of an object at runtime is often an
@@ -2007,10 +2025,10 @@ new code. If you find yourself needing to write code that behaves
 differently based on the class of an object, consider one of the
 following alternatives to querying the type:
 
--   Virtual methods are the preferred way of executing different code
+  - Virtual methods are the preferred way of executing different code
     paths depending on a specific subclass type. This puts the work
     within the object itself.
--   If the work belongs outside the object and instead in some
+  - If the work belongs outside the object and instead in some
     processing code, consider a double-dispatch solution, such as the
     Visitor design pattern. This allows a facility outside the object
     itself to determine the type of class using the built-in type
@@ -2024,7 +2042,7 @@ class is in fact an instance of a particular derived class, then a
 Decision trees based on type are a strong indication that your code is
 on the wrong track.
 
-``` {.badcode}
+``` cpp
 if (typeid(*data) == typeid(D1)) {
   ...
 } else if (typeid(*data) == typeid(D2)) {
@@ -2041,13 +2059,13 @@ Do not hand-implement an RTTI-like workaround. The arguments against
 RTTI apply just as much to workarounds like class hierarchies with type
 tags. Moreover, workarounds disguise your true intent.
 
-### Casting {#Casting}
+### Casting
 
 Use C++-style casts like `static_cast<float>(double_value)`, or brace
-initialization for conversion of arithmetic types like
-`int64 y = int64{1} << 42`. Do not use cast formats like `(int)x` unless
-the cast is to `void`. You may use cast formats like \`T(x)\` only when
-\`T\` is a class type.
+initialization for conversion of arithmetic types like `int64 y =
+int64{1} << 42`. Do not use cast formats like `(int)x` unless the cast
+is to `void`. You may use cast formats like \`T(x)\` only when \`T\` is
+a class type.
 
 C++ introduced a different cast system from C that distinguishes the
 types of cast operations.
@@ -2063,31 +2081,31 @@ The C++-style cast syntax is verbose and cumbersome.
 In general, do not use C-style casts. Instead, use these C++-style casts
 when explicit type conversion is necessary.
 
--   Use brace initialization to convert arithmetic types (e.g.,
+  - Use brace initialization to convert arithmetic types (e.g.,
     `int64{x}`). This is the safest approach because code will not
     compile if conversion can result in information loss. The syntax is
     also concise.
--   Use `static_cast` as the equivalent of a C-style cast that does
+  - Use `static_cast` as the equivalent of a C-style cast that does
     value conversion, when you need to explicitly up-cast a pointer from
     a class to its superclass, or when you need to explicitly cast a
     pointer from a superclass to a subclass. In this last case, you must
     be sure your object is actually an instance of the subclass.
--   Use `const_cast` to remove the `const` qualifier (see
+  - Use `const_cast` to remove the `const` qualifier (see
     [const](#Use_of_const)).
--   Use `reinterpret_cast` to do unsafe conversions of pointer types to
+  - Use `reinterpret_cast` to do unsafe conversions of pointer types to
     and from integer and other pointer types. Use this only if you know
     what you are doing and you understand the aliasing issues. Also,
     consider the alternative `absl::bit_cast`.
--   Use `absl::bit_cast` to interpret the raw bits of a value using a
+  - Use `absl::bit_cast` to interpret the raw bits of a value using a
     different type of the same size (a type pun), such as interpreting
     the bits of a `double` as `int64`.
 
 See the [RTTI section](#Run-Time_Type_Information__RTTI_) for guidance
 on the use of `dynamic_cast`.
 
-### Streams {#Streams}
+### Streams
 
-Use streams where appropriate, and stick to \"simple\" usages. Overload
+Use streams where appropriate, and stick to "simple" usages. Overload
 `<<` for streaming only for types representing values, and write only
 the user-visible value, not any implementation details.
 
@@ -2097,7 +2115,7 @@ mostly for debug logging and test diagnostics.
 
 The `<<` and `>>` stream operators provide an API for formatted I/O that
 is easily learned, portable, reusable, and extensible. `printf`, by
-contrast, doesn\'t even support `std::string`, to say nothing of
+contrast, doesn't even support `std::string`, to say nothing of
 user-defined types, and is very difficult to use portably. `printf` also
 obliges you to choose among the numerous slightly different versions of
 that function, and navigate the dozens of conversion specifiers.
@@ -2106,31 +2124,31 @@ Streams provide first-class support for console I/O via `std::cin`,
 `std::cout`, `std::cerr`, and `std::clog`. The C APIs do as well, but
 are hampered by the need to manually buffer the input.
 
--   Stream formatting can be configured by mutating the state of the
+  - Stream formatting can be configured by mutating the state of the
     stream. Such mutations are persistent, so the behavior of your code
     can be affected by the entire previous history of the stream, unless
     you go out of your way to restore it to a known state every time
     other code might have touched it. User code can not only modify the
     built-in state, it can add new state variables and behaviors through
     a registration system.
--   It is difficult to precisely control stream output, due to the above
+  - It is difficult to precisely control stream output, due to the above
     issues, the way code and data are mixed in streaming code, and the
     use of operator overloading (which may select a different overload
     than you expect).
--   The practice of building up output through chains of `<<` operators
+  - The practice of building up output through chains of `<<` operators
     interferes with internationalization, because it bakes word order
-    into the code, and streams\' support for localization is
+    into the code, and streams' support for localization is
     [flawed](http://www.boost.org/doc/libs/1_48_0/libs/locale/doc/html/rationale.html#rationale_why).
--   The streams API is subtle and complex, so programmers must develop
+  - The streams API is subtle and complex, so programmers must develop
     experience with it in order to use it effectively.
--   Resolving the many overloads of `<<` is extremely costly for the
+  - Resolving the many overloads of `<<` is extremely costly for the
     compiler. When used pervasively in a large code base, it can consume
     as much as 20% of the parsing and semantic analysis time.
 
 Use streams only when they are the best tool for the job. This is
 typically the case when the I/O is ad-hoc, local, human-readable, and
 targeted at other developers rather than end-users. Be consistent with
-the code around you, and with the codebase as a whole; if there\'s an
+the code around you, and with the codebase as a whole; if there's an
 established tool for your problem, use that tool instead. In particular,
 logging libraries are usually a better choice than `std::cerr` or
 `std::clog` for diagnostic output, and the libraries in `absl/strings`
@@ -2154,7 +2172,7 @@ the output of `<<`; if you need to print object internals for debugging,
 use named functions instead (a method named `DebugString()` is the most
 common convention).
 
-### Preincrement and Predecrement {#Preincrement_and_Predecrement}
+### Preincrement and Predecrement
 
 Use the prefix form (`++i`) of the increment and decrement operators
 unless you need postfix semantics.
@@ -2166,18 +2184,18 @@ whether to preincrement (decrement) or postincrement (decrement).
 A postfix increment/decrement expression evaluates to the value *as it
 was before it was modified*. This can result in code that is more
 compact but harder to read. The prefix form is generally more readable,
-is never less efficient, and can be more efficient because it doesn\'t
+is never less efficient, and can be more efficient because it doesn't
 need to make a copy of the value as it was before the operation.
 
 The tradition developed, in C, of using post-increment, even when the
 expression value is not used, especially in `for` loops. Some find
-post-increment easier to read, since the \"subject\" (`i`) precedes the
-\"verb\" (`++`), just like in English.
+post-increment easier to read, since the "subject" (`i`) precedes the
+"verb" (`++`), just like in English.
 
 Use prefix increment/decrement, unless the code explicitly needs the
 result of the postfix increment/decrement expression.
 
-### Use of const {#Use_of_const}
+### Use of const
 
 In APIs, use `const` whenever it makes sense. `constexpr` is a better
 choice for some uses of const.
@@ -2185,8 +2203,8 @@ choice for some uses of const.
 Declared variables and parameters can be preceded by the keyword `const`
 to indicate the variables are not changed (e.g., `const int foo`). Class
 functions can have the `const` qualifier to indicate the function does
-not change the state of the class member variables (e.g.,
-`class Foo { int Bar(char c) const; };`).
+not change the state of the class member variables (e.g., `class Foo {
+int Bar(char c) const; };`).
 
 Easier for people to understand how variables are being used. Allows the
 compiler to do better type checking, and, conceivably, generate better
@@ -2208,40 +2226,40 @@ consistent and reliable way to distinguish reads from writes is critical
 to writing thread-safe code, and is useful in many other contexts as
 well. In particular:
 
--   If a function guarantees that it will not modify an argument passed
+  - If a function guarantees that it will not modify an argument passed
     by reference or by pointer, the corresponding function parameter
     should be a reference-to-const (`const T&`) or pointer-to-const
     (`const T*`), respectively.
--   For a function parameter passed by value, `const` has no effect on
+  - For a function parameter passed by value, `const` has no effect on
     the caller, thus is not recommended in function declarations. See
     [TotW \#109](https://abseil.io/tips/109).
--   Declare methods to be `const` unless they alter the logical state of
+  - Declare methods to be `const` unless they alter the logical state of
     the object (or enable the user to modify that state, e.g., by
-    returning a non-const reference, but that\'s rare), or they can\'t
+    returning a non-const reference, but that's rare), or they can't
     safely be invoked concurrently.
 
 Using `const` on local variables is neither encouraged nor discouraged.
 
-All of a class\'s `const` operations should be safe to invoke
-concurrently with each other. If that\'s not feasible, the class must be
-clearly documented as \"thread-unsafe\".
+All of a class's `const` operations should be safe to invoke
+concurrently with each other. If that's not feasible, the class must be
+clearly documented as "thread-unsafe".
 
 #### Where to put the const
 
 Some people favor the form `int const *foo` to `const int* foo`. They
-argue that this is more readable because it\'s more consistent: it keeps
-the rule that `const` always follows the object it\'s describing.
-However, this consistency argument doesn\'t apply in codebases with few
+argue that this is more readable because it's more consistent: it keeps
+the rule that `const` always follows the object it's describing.
+However, this consistency argument doesn't apply in codebases with few
 deeply-nested pointer expressions since most `const` expressions have
 only one `const`, and it applies to the underlying value. In such cases,
-there\'s no consistency to maintain. Putting the `const` first is
+there's no consistency to maintain. Putting the `const` first is
 arguably more readable, since it follows English in putting the
-\"adjective\" (`const`) before the \"noun\" (`int`).
+"adjective" (`const`) before the "noun" (`int`).
 
 That said, while we encourage putting `const` first, we do not require
-it. But be consistent with the code around you!
+it. But be consistent with the code around you\!
 
-### Use of constexpr {#Use_of_constexpr}
+### Use of constexpr
 
 Use `constexpr` to define true constants or to ensure constant
 initialization.
@@ -2266,14 +2284,14 @@ constants and the functions that support their definitions. Avoid
 complexifying function definitions to enable their use with `constexpr`.
 Do not use `constexpr` to force inlining.
 
-### Integer Types {#Integer_Types}
+### Integer Types
 
 Of the built-in C++ integer types, the only one used is `int`. If a
 program needs a variable of a different size, use a precise-width
 integer type from `<stdint.h>`, such as `int16_t`. If your variable
-represents a value that could ever be greater than or equal to 2\^31
+represents a value that could ever be greater than or equal to 2^31
 (2GiB), use a 64-bit type such as `int64_t`. Keep in mind that even if
-your value won\'t ever be too large for an `int`, it may be used in
+your value won't ever be too large for an `int`, it may be used in
 intermediate calculations which may require a larger type. When in
 doubt, choose a larger type.
 
@@ -2287,23 +2305,22 @@ The sizes of integral types in C++ can vary based on compiler and
 architecture.
 
 `<cstdint>` defines types like `int16_t`, `uint32_t`, `int64_t`, etc.
-You should always use those in preference to `short`,
-`unsigned long long` and the like, when you need a guarantee on the size
-of an integer. Of the C integer types, only `int` should be used. When
-appropriate, you are welcome to use standard types like `size_t` and
-`ptrdiff_t`.
+You should always use those in preference to `short`, `unsigned long
+long` and the like, when you need a guarantee on the size of an integer.
+Of the C integer types, only `int` should be used. When appropriate, you
+are welcome to use standard types like `size_t` and `ptrdiff_t`.
 
 We use `int` very often, for integers we know are not going to be too
 big, e.g., loop counters. Use plain old `int` for such things. You
-should assume that an `int` is at least 32 bits, but don\'t assume that
+should assume that an `int` is at least 32 bits, but don't assume that
 it has more than 32 bits. If you need a 64-bit integer type, use
 `int64_t` or `uint64_t`.
 
-For integers we know can be \"big\", use `int64_t`.
+For integers we know can be "big", use `int64_t`.
 
 You should not use the unsigned integer types such as `uint32_t`, unless
 there is a valid reason such as representing a bit pattern rather than a
-number, or you need defined overflow modulo 2\^N. In particular, do not
+number, or you need defined overflow modulo 2^N. In particular, do not
 use unsigned types to say a number will never be negative. Instead, use
 assertions for this.
 
@@ -2322,7 +2339,7 @@ arithmetic. Because of historical accident, the C++ standard also uses
 unsigned integers to represent the size of containers - many members of
 the standards body believe this to be a mistake, but it is effectively
 impossible to fix at this point. The fact that unsigned arithmetic
-doesn\'t model the behavior of a simple integer, but is instead defined
+doesn't model the behavior of a simple integer, but is instead defined
 by the standard to model modular arithmetic (wrapping around on
 overflow/underflow), means that a significant class of bugs cannot be
 diagnosed by the compiler. In other cases, the defined behavior impedes
@@ -2335,12 +2352,12 @@ mix signedness, and try to avoid unsigned types (except for representing
 bitfields or modular arithmetic). Do not use an unsigned type merely to
 assert that a variable is non-negative.
 
-### 64-bit Portability {#64-bit_Portability}
+### 64-bit Portability {\#64-bit\_Portability}
 
 Code should be 64-bit and 32-bit friendly. Bear in mind problems of
 printing, comparisons, and structure alignment.
 
--   Correct portable `printf()` conversion specifiers for some integral
+  - Correct portable `printf()` conversion specifiers for some integral
     typedefs rely on macro expansions that we find unpleasant to use and
     impractical to require (the `PRI` macros from `<cinttypes>`). Unless
     there is no reasonable alternative for your particular case, try to
@@ -2359,10 +2376,10 @@ printing, comparisons, and structure alignment.
     which printf has dedicated length modifiers, such as `size_t` (`z`),
     `ptrdiff_t` (`t`), and `maxint_t` (`j`).
 
--   Remember that `sizeof(void *)` != `sizeof(int)`. Use `intptr_t` if
+  - Remember that `sizeof(void *)` \!= `sizeof(int)`. Use `intptr_t` if
     you want a pointer-sized integer.
 
--   You may need to be careful with structure alignments, particularly
+  - You may need to be careful with structure alignments, particularly
     for structures being stored on disk. Any class/structure with a
     `int64_t`/`uint64_t` member will by default end up being 8-byte
     aligned on a 64-bit system. If you have such structures being shared
@@ -2372,17 +2389,15 @@ printing, comparisons, and structure alignment.
     `__attribute__((packed))`. MSVC offers `#pragma pack()` and
     `__declspec(align())`.
 
--   Use [braced-initialization](#Casting) as needed to create 64-bit
+  - Use [braced-initialization](#Casting) as needed to create 64-bit
     constants. For example:
 
-    <div>
+    ``` cpp
+    int64_t my_value{0x123456789};
+    uint64_t my_mask{3ULL << 48};
+    ```
 
-        int64_t my_value{0x123456789};
-        uint64_t my_mask{3ULL << 48};
-
-    </div>
-
-### Preprocessor Macros {#Preprocessor_Macros}
+### Preprocessor Macros
 
 Avoid defining macros, especially in headers; prefer inline functions,
 enums, and `const` variables. Name macros with a project-specific
@@ -2400,7 +2415,7 @@ Refactoring and analysis tools have a dramatically harder time updating
 the interface. As a consequence, we specifically disallow using macros
 in this way. For example, avoid patterns like:
 
-``` {.badcode}
+``` cpp
 class WOMBAT_TYPE(Foo) {
   // ...
 
@@ -2414,9 +2429,9 @@ class WOMBAT_TYPE(Foo) {
 Luckily, macros are not nearly as necessary in C++ as they are in C.
 Instead of using a macro to inline performance-critical code, use an
 inline function. Instead of using a macro to store a constant, use a
-`const` variable. Instead of using a macro to \"abbreviate\" a long
+`const` variable. Instead of using a macro to "abbreviate" a long
 variable name, use a reference. Instead of using a macro to
-conditionally compile code \... well, don\'t do that at all (except, of
+conditionally compile code ... well, don't do that at all (except, of
 course, for the `#define` guards to prevent double inclusion of header
 files). It makes testing much more difficult.
 
@@ -2424,29 +2439,29 @@ Macros can do things these other techniques cannot, and you do see them
 in the codebase, especially in the lower-level libraries. And some of
 their special features (like stringifying, concatenation, and so forth)
 are not available through the language proper. But before using a macro,
-consider carefully whether there\'s a non-macro way to achieve the same
+consider carefully whether there's a non-macro way to achieve the same
 result. If you need to use a macro to define an interface, contact your
 project leads to request a waiver of this rule.
 
 The following usage pattern will avoid many problems with macros; if you
 use macros, follow it whenever possible:
 
--   Don\'t define macros in a `.h` file.
--   `#define` macros right before you use them, and `#undef` them right
+  - Don't define macros in a `.h` file.
+  - `#define` macros right before you use them, and `#undef` them right
     after.
--   Do not just `#undef` an existing macro before replacing it with your
-    own; instead, pick a name that\'s likely to be unique.
--   Try not to use macros that expand to unbalanced C++ constructs, or
+  - Do not just `#undef` an existing macro before replacing it with your
+    own; instead, pick a name that's likely to be unique.
+  - Try not to use macros that expand to unbalanced C++ constructs, or
     at least document that behavior well.
--   Prefer not using `##` to generate function/class/variable names.
+  - Prefer not using `##` to generate function/class/variable names.
 
 Exporting macros from headers (i.e., defining them in a header without
 `#undef`ing them before the end of the header) is extremely strongly
 discouraged. If you do export a macro from a header, it must have a
 globally unique name. To achieve this, it must be named with a prefix
-consisting of your project\'s namespace name (but upper case).
+consisting of your project's namespace name (but upper case).
 
-### 0 and nullptr/NULL {#0_and_nullptr/NULL}
+### 0 and nullptr/NULL {\#0\_and\_nullptr/NULL}
 
 Use `nullptr` for pointers, and `'\0'` for chars (and not the `0`
 literal).
@@ -2474,52 +2489,56 @@ unrelated to any particular variable, such as code that manages an
 external or internal data format where a variable of an appropriate C++
 type is not convenient.
 
-    MyStruct data;
-    memset(&data, 0, sizeof(data));
+``` cpp
+MyStruct data;
+memset(&data, 0, sizeof(data));
+```
 
-``` {.badcode}
+``` cpp
 memset(&data, 0, sizeof(MyStruct));
 ```
 
-    if (raw_size < sizeof(int)) {
-      LOG(ERROR) << "compressed record not big enough for count: " << raw_size;
-      return false;
-    }
+``` cpp
+if (raw_size < sizeof(int)) {
+  LOG(ERROR) << "compressed record not big enough for count: " << raw_size;
+  return false;
+}
+```
 
-[]{#auto}
+<span id="auto"></span>
 
-### Type deduction {#Type_deduction}
+### Type deduction
 
 Use type deduction only if it makes the code clearer to readers who
-aren\'t familiar with the project, or if it makes the code safer. Do not
+aren't familiar with the project, or if it makes the code safer. Do not
 use it merely to avoid the inconvenience of writing an explicit type.
 
 There are several contexts in which C++ allows (or even requires) types
 to be deduced by the compiler, rather than spelled out explicitly in the
 code:
 
-[Function template argument deduction](https://en.cppreference.com/w/cpp/language/template_argument_deduction)
-
-:   A function template can be invoked without explicit template
+  - [Function template argument
+    deduction](https://en.cppreference.com/w/cpp/language/template_argument_deduction)
+    A function template can be invoked without explicit template
     arguments. The compiler deduces those arguments from the types of
     the function arguments:
 
-    ``` {.neutralcode}
+    ``` cpp
     template <typename T>
     void f(T t);
 
     f(0);  // Invokes f<int>(0)
     ```
 
-[`auto` variable declarations](https://en.cppreference.com/w/cpp/language/auto)
+  - [`auto` variable
+    declarations](https://en.cppreference.com/w/cpp/language/auto)
+    A variable declaration can use the `auto` keyword in place of the
+    type. The compiler deduces the type from the variable's initializer,
+    following the same rules as function template argument deduction
+    with the same initializer (so long as you don't use curly braces
+    instead of parentheses).
 
-:   A variable declaration can use the `auto` keyword in place of the
-    type. The compiler deduces the type from the variable\'s
-    initializer, following the same rules as function template argument
-    deduction with the same initializer (so long as you don\'t use curly
-    braces instead of parentheses).
-
-    ``` {.neutralcode}
+    ``` neutralcode
     auto a = 42;  // a is an int
     auto& b = a;  // b is an int&
     auto c = b;   // c is an int
@@ -2527,21 +2546,21 @@ code:
     ```
 
     `auto` can be qualified with `const`, and can be used as part of a
-    pointer or reference type, but it can\'t be used as a template
+    pointer or reference type, but it can't be used as a template
     argument. A rare variant of this syntax uses `decltype(auto)`
     instead of `auto`, in which case the deduced type is the result of
     applying
     [`decltype`](https://en.cppreference.com/w/cpp/language/decltype) to
     the initializer.
 
-[Function return type deduction](https://en.cppreference.com/w/cpp/language/function#Return_type_deduction)
-
-:   `auto` (and `decltype(auto)`) can also be used in place of a
+  - [Function return type
+    deduction](https://en.cppreference.com/w/cpp/language/function#Return_type_deduction)
+    `auto` (and `decltype(auto)`) can also be used in place of a
     function return type. The compiler deduces the return type from the
     `return` statements in the function body, following the same rules
     as for variable declarations:
 
-    ``` {.neutralcode}
+    ``` neutralcode
     auto f() { return 0; }  // The return type of f is int
     ```
 
@@ -2549,47 +2568,48 @@ code:
     in the same way, but this is triggered by omitting the return type,
     rather than by an explicit `auto`. Confusingly, [trailing return
     type](#trailing_return) syntax for functions also uses `auto` in the
-    return-type position, but that doesn\'t rely on type deduction;
-    it\'s just an alternate syntax for an explicit return type.
+    return-type position, but that doesn't rely on type deduction; it's
+    just an alternate syntax for an explicit return type.
 
-[Generic lambdas](https://isocpp.org/wiki/faq/cpp14-language#generic-lambdas)
-
-:   A lambda expression can use the `auto` keyword in place of one or
-    more of its parameter types. This causes the lambda\'s call operator
+  - [Generic
+    lambdas](https://isocpp.org/wiki/faq/cpp14-language#generic-lambdas)
+    A lambda expression can use the `auto` keyword in place of one or
+    more of its parameter types. This causes the lambda's call operator
     to be a function template instead of an ordinary function, with a
     separate template parameter for each `auto` function parameter:
 
-    ``` {.neutralcode}
+    ``` neutralcode
     // Sort `vec` in decreasing order
     std::sort(vec.begin(), vec.end(), [](auto lhs, auto rhs) { return lhs > rhs; });
     ```
 
-[Lambda init captures](https://isocpp.org/wiki/faq/cpp14-language#lambda-captures)
-
-:   Lambda captures can have explicit initializers, which can be used to
+  - [Lambda init
+    captures](https://isocpp.org/wiki/faq/cpp14-language#lambda-captures)
+    Lambda captures can have explicit initializers, which can be used to
     declare wholly new variables rather than only capturing existing
     ones:
 
-    ``` {.neutralcode}
+    ``` neutralcode
     [x = 42, y = "foo"] { ... }  // x is an int, and y is a const char*
     ```
 
-    This syntax doesn\'t allow the type to be specified; instead, it\'s
+    This syntax doesn't allow the type to be specified; instead, it's
     deduced using the rules for `auto` variables.
 
-[Class template argument deduction](https://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
-:   See [below](#CTAD).
+  - [Class template argument
+    deduction](https://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
+    See [below](#CTAD).
 
-[Structured bindings](https://en.cppreference.com/w/cpp/language/structured_binding)
-
-:   When declaring a tuple, struct, or array using `auto`, you can
+  - [Structured
+    bindings](https://en.cppreference.com/w/cpp/language/structured_binding)
+    When declaring a tuple, struct, or array using `auto`, you can
     specify names for the individual elements instead of a name for the
-    whole object; these names are called \"structured bindings\", and
-    the whole declaration is called a \"structured binding
-    declaration\". This syntax provides no way of specifying the type of
-    either the enclosing object or the individual names:
+    whole object; these names are called "structured bindings", and the
+    whole declaration is called a "structured binding declaration". This
+    syntax provides no way of specifying the type of either the
+    enclosing object or the individual names:
 
-    ``` {.neutralcode}
+    ``` neutralcode
     auto [iter, success] = my_map.insert({key, value});
     if (!success) {
       iter->second = value;
@@ -2601,34 +2621,33 @@ code:
     tuple/struct/array, rather than the individual bindings. The rules
     that determine the types of the bindings are quite complex; the
     results tend to be unsurprising, except that the binding types
-    typically won\'t be references even if the declaration declares a
+    typically won't be references even if the declaration declares a
     reference (but they will usually behave like references anyway).
 
 (These summaries omit many details and caveats; see the links for
 further information.)
 
--   C++ type names can be long and cumbersome, especially when they
+  - C++ type names can be long and cumbersome, especially when they
     involve templates or namespaces.
--   When a C++ type name is repeated within a single declaration or a
+  - When a C++ type name is repeated within a single declaration or a
     small code region, the repetition may not be aiding readability.
--   It is sometimes safer to let the type be deduced, since that avoids
+  - It is sometimes safer to let the type be deduced, since that avoids
     the possibility of unintended copies or type conversions.
 
 C++ code is usually clearer when types are explicit, especially when
 type deduction would depend on information from distant parts of the
 code. In expressions like:
 
-``` {.badcode}
+``` cpp
 auto foo = x.add_foo();
 auto i = y.Find(key);
 ```
 
 it may not be obvious what the resulting types are if the type of `y`
-isn\'t very well known, or if `y` was declared many lines earlier.
+isn't very well known, or if `y` was declared many lines earlier.
 
-Programmers have to understand when type deduction will or won\'t
-produce a reference type, or they\'ll get copies when they didn\'t mean
-to.
+Programmers have to understand when type deduction will or won't produce
+a reference type, or they'll get copies when they didn't mean to.
 
 If a deduced type is used as part of an interface, then a programmer
 might change its type while only intending to change its value, leading
@@ -2642,7 +2661,7 @@ with your project, so types that you and your reviewer experience as
 unnecessary clutter will very often provide useful information to
 others. For example, you can assume that the return type of
 `make_unique<Foo>()` is obvious, but the return type of
-`MyWidgetFactory()` probably isn\'t.
+`MyWidgetFactory()` probably isn't.
 
 These principles apply to all forms of type deduction, but the details
 vary, as described in the following sections.
@@ -2654,7 +2673,7 @@ is the expected default way of interacting with function templates,
 because it allows function templates to act like infinite sets of
 ordinary function overloads. Consequently, function templates are almost
 always designed so that template argument deduction is clear and safe,
-or doesn\'t compile.
+or doesn't compile.
 
 #### Local variable type deduction
 
@@ -2662,7 +2681,7 @@ For local variables, you can use type deduction to make the code clearer
 by eliminating type information that is obvious or irrelevant, so that
 the reader can focus on the meaningful parts of the code:
 
-``` {.neutralcode}
+``` neutralcode
 std::unique_ptr<WidgetWithBellsAndWhistles> widget_ptr =
     absl::make_unique<WidgetWithBellsAndWhistles>(arg1, arg2);
 absl::flat_hash_map<std::string,
@@ -2671,20 +2690,20 @@ absl::flat_hash_map<std::string,
 std::array<int, 6> numbers = {4, 8, 15, 16, 23, 42};
 ```
 
-``` {.goodcode}
+``` goodcode
 auto widget_ptr = absl::make_unique<WidgetWithBellsAndWhistles>(arg1, arg2);
 auto it = my_map_.find(key);
 std::array numbers = {4, 8, 15, 16, 23, 42};
 ```
 
 Types sometimes contain a mixture of useful information and boilerplate,
-such as `it` in the example above: it\'s obvious that the type is an
+such as `it` in the example above: it's obvious that the type is an
 iterator, and in many contexts the container type and even the key type
-aren\'t relevant, but the type of the values is probably useful. In such
-situations, it\'s often possible to define local variables with explicit
+aren't relevant, but the type of the values is probably useful. In such
+situations, it's often possible to define local variables with explicit
 types that convey the relevant information:
 
-``` {.goodcode}
+``` goodcode
 auto it = my_map_.find(key);
 if (it != my_map_.end()) {
   WidgetWithBellsAndWhistles& widget = *it->second;
@@ -2699,7 +2718,7 @@ this actually provides a meaningful benefit are quite rare. Note that
 class template argument deduction is also subject to a [separate style
 rule](#CTAD).
 
-Do not use `decltype(auto)` if a simpler option will work, because it\'s
+Do not use `decltype(auto)` if a simpler option will work, because it's
 a fairly obscure feature, so it has a high cost in code clarity.
 
 #### Return type deduction
@@ -2709,7 +2728,7 @@ function body has a very small number of `return` statements, and very
 little other code, because otherwise the reader may not be able to tell
 at a glance what the return type is. Furthermore, use it only if the
 function or lambda has a very narrow scope, because functions with
-deduced return types don\'t define abstraction boundaries: the
+deduced return types don't define abstraction boundaries: the
 implementation *is* the interface. In particular, public functions in
 header files should almost never have deduced return types.
 
@@ -2719,8 +2738,8 @@ header files should almost never have deduced return types.
 the actual type is determined by the code that calls the lambda, rather
 than by the definition of the lambda. Consequently, an explicit type
 will almost always be clearer unless the lambda is explicitly called
-very close to where it\'s defined (so that the reader can easily see
-both), or the lambda is passed to an interface so well-known that it\'s
+very close to where it's defined (so that the reader can easily see
+both), or the lambda is passed to an interface so well-known that it's
 obvious what arguments it will eventually be called with (e.g., the
 `std::sort` example above).
 
@@ -2738,8 +2757,8 @@ the elements of a larger object. This means that a structured binding
 declaration may provide a net readability improvement over an explicit
 type, even in cases where `auto` would not. Structured bindings are
 especially beneficial when the object is a pair or tuple (as in the
-`insert` example above), because they don\'t have meaningful field names
-to begin with, but note that you generally [shouldn\'t use pairs or
+`insert` example above), because they don't have meaningful field names
+to begin with, but note that you generally [shouldn't use pairs or
 tuples](#Structs_vs._Tuples) unless a pre-existing API like `insert`
 forces you to.
 
@@ -2747,7 +2766,7 @@ If the object being bound is a struct, it may sometimes be helpful to
 provide names that are more specific to your usage, but keep in mind
 that this may also mean the names are less recognizable to your reader
 than the field names. We recommend using a comment to indicate the name
-of the underlying field, if it doesn\'t match the name of the binding,
+of the underlying field, if it doesn't match the name of the binding,
 using the same syntax as for function parameter comments:
 
     auto [/*field_name1=*/ bound_name1, /*field_name2=*/ bound_name2] = ...
@@ -2755,30 +2774,30 @@ using the same syntax as for function parameter comments:
 As with function parameter comments, this can enable tools to detect if
 you get the order of the fields wrong.
 
-### Class template argument deduction {#CTAD}
+### Class template argument deduction
 
 Use class template argument deduction only with templates that have
 explicitly opted into supporting it.
 
 [Class template argument
 deduction](https://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
-(often abbreviated \"CTAD\") occurs when a variable is declared with a
+(often abbreviated "CTAD") occurs when a variable is declared with a
 type that names a template, and the template argument list is not
 provided (not even empty angle brackets):
 
-``` {.neutralcode}
+``` neutralcode
 std::array a = {1, 2, 3};  // `a` is a std::array<int, 3>
 ```
 
 The compiler deduces the arguments from the initializer using the
-template\'s \"deduction guides\", which can be explicit or implicit.
+template's "deduction guides", which can be explicit or implicit.
 
 Explicit deduction guides look like function declarations with trailing
-return types, except that there\'s no leading `auto`, and the function
+return types, except that there's no leading `auto`, and the function
 name is the name of the template. For example, the above example relies
 on this deduction guide for `std::array`:
 
-``` {.neutralcode}
+``` neutralcode
 namespace std {
 template <class T, class... U>
 array(T, U...) -> std::array<T, 1 + sizeof...(U)>;
@@ -2790,7 +2809,7 @@ specialization) also implicitly define deduction guides.
 
 When you declare a variable that relies on CTAD, the compiler selects a
 deduction guide using the rules of constructor overload resolution, and
-that guide\'s return type becomes the type of the variable.
+that guide's return type becomes the type of the variable.
 
 CTAD can sometimes allow you to omit boilerplate from your code.
 
@@ -2804,12 +2823,12 @@ deduction guides to fix those problems might break any existing code
 that relies on the implicit deduction guides.
 
 CTAD also suffers from many of the same drawbacks as `auto`, because
-they are both mechanisms for deducing all or part of a variable\'s type
+they are both mechanisms for deducing all or part of a variable's type
 from its initializer. CTAD does give the reader more information than
-`auto`, but it also doesn\'t give the reader an obvious cue that
+`auto`, but it also doesn't give the reader an obvious cue that
 information has been omitted.
 
-Do not use CTAD with a given template unless the template\'s maintainers
+Do not use CTAD with a given template unless the template's maintainers
 have opted into supporting use of CTAD by providing at least one
 explicit deduction guide (all templates in the `std` namespace are also
 presumed to have opted in). This should be enforced with a compiler
@@ -2818,16 +2837,16 @@ warning if available.
 Uses of CTAD must also follow the general rules on [Type
 deduction](#Type_deduction).
 
-### Designated initializers {#Designated_initializers}
+### Designated initializers
 
 Use designated initializers only in their C++20-compliant form.
 
 [Designated
 initializers](https://en.cppreference.com/w/cpp/language/aggregate_initialization#Designated_initializers)
-are a syntax that allows for initializing an aggregate (\"plain old
-struct\") by naming its fields explicitly:
+are a syntax that allows for initializing an aggregate ("plain old
+struct") by naming its fields explicitly:
 
-``` {.neutralcode}
+``` neutralcode
   struct Point {
     float x = 0.0;
     float y = 0.0;
@@ -2864,57 +2883,65 @@ Use designated initializers only in the form that is compatible with the
 draft C++20 standard: with initializers in the same order as the
 corresponding fields appear in the struct definition.
 
-### Lambda expressions {#Lambda_expressions}
+### Lambda expressions
 
 Use lambda expressions where appropriate. Prefer explicit captures when
 the lambda will escape the current scope.
 
 Lambda expressions are a concise way of creating anonymous function
-objects. They\'re often useful when passing functions as arguments. For
+objects. They're often useful when passing functions as arguments. For
 example:
 
-    std::sort(v.begin(), v.end(), [](int x, int y) {
-      return Weight(x) < Weight(y);
-    });
+``` cpp
+std::sort(v.begin(), v.end(), [](int x, int y) {
+  return Weight(x) < Weight(y);
+});
+```
 
 They further allow capturing variables from the enclosing scope either
 explicitly by name, or implicitly using a default capture. Explicit
 captures require each variable to be listed, as either a value or
 reference capture:
 
-    int weight = 3;
-    int sum = 0;
-    // Captures `weight` by value and `sum` by reference.
-    std::for_each(v.begin(), v.end(), [weight, &sum](int x) {
-      sum += weight * x;
-    });
+``` cpp
+int weight = 3;
+int sum = 0;
+// Captures `weight` by value and `sum` by reference.
+std::for_each(v.begin(), v.end(), [weight, &sum](int x) {
+  sum += weight * x;
+});
+```
 
 Default captures implicitly capture any variable referenced in the
 lambda body, including `this` if any members are used:
 
-    const std::vector<int> lookup_table = ...;
-    std::vector<int> indices = ...;
-    // Captures `lookup_table` by reference, sorts `indices` by the value
-    // of the associated element in `lookup_table`.
-    std::sort(indices.begin(), indices.end(), [&](int a, int b) {
-      return lookup_table[a] < lookup_table[b];
-    });
+``` cpp
+const std::vector<int> lookup_table = ...;
+std::vector<int> indices = ...;
+// Captures `lookup_table` by reference, sorts `indices` by the value
+// of the associated element in `lookup_table`.
+std::sort(indices.begin(), indices.end(), [&](int a, int b) {
+  return lookup_table[a] < lookup_table[b];
+});
+```
 
 A variable capture can also have an explicit initializer, which can be
 used for capturing move-only variables by value, or for other situations
 not handled by ordinary reference or value captures:
 
-    std::unique_ptr<Foo> foo = ...;
-    [foo = std::move(foo)] () {
-      ...
-    }
+``` cpp
+std::unique_ptr<Foo> foo = ...;
+[foo = std::move(foo)] () {
+  ...
+}
+```
 
-Such captures (often called \"init captures\" or \"generalized lambda
-captures\") need not actually \"capture\" anything from the enclosing
+Such captures (often called "init captures" or "generalized lambda
+captures") need not actually "capture" anything from the enclosing
 scope, or even have a name from the enclosing scope; this syntax is a
 fully general way to define members of a lambda object:
 
-``` {.neutralcode}
+``` neutralcode
 [foo = std::vector<int>({1, 2, 3})] () {
   ...
 }
@@ -2923,48 +2950,46 @@ fully general way to define members of a lambda object:
 The type of a capture with an initializer is deduced using the same
 rules as `auto`.
 
--   Lambdas are much more concise than other ways of defining function
+  - Lambdas are much more concise than other ways of defining function
     objects to be passed to STL algorithms, which can be a readability
     improvement.
--   Appropriate use of default captures can remove redundancy and
+  - Appropriate use of default captures can remove redundancy and
     highlight important exceptions from the default.
--   Lambdas, `std::function`, and `std::bind` can be used in combination
+  - Lambdas, `std::function`, and `std::bind` can be used in combination
     as a general purpose callback mechanism; they make it easy to write
     functions that take bound functions as arguments.
 
-```{=html}
 <!-- -->
-```
--   Variable capture in lambdas can be a source of dangling-pointer
+
+  - Variable capture in lambdas can be a source of dangling-pointer
     bugs, particularly if a lambda escapes the current scope.
--   Default captures by value can be misleading because they do not
-    prevent dangling-pointer bugs. Capturing a pointer by value doesn\'t
+  - Default captures by value can be misleading because they do not
+    prevent dangling-pointer bugs. Capturing a pointer by value doesn't
     cause a deep copy, so it often has the same lifetime issues as
     capture by reference. This is especially confusing when capturing
-    \'this\' by value, since the use of \'this\' is often implicit.
--   Captures actually declare new variables (whether or not the captures
+    'this' by value, since the use of 'this' is often implicit.
+  - Captures actually declare new variables (whether or not the captures
     have initializers), but they look nothing like any other variable
-    declaration syntax in C++. In particular, there\'s no place for the
-    variable\'s type, or even an `auto` placeholder (although init
+    declaration syntax in C++. In particular, there's no place for the
+    variable's type, or even an `auto` placeholder (although init
     captures can indicate it indirectly, e.g., with a cast). This can
     make it difficult to even recognize them as declarations.
--   Init captures inherently rely on [type deduction](#Type_deduction),
+  - Init captures inherently rely on [type deduction](#Type_deduction),
     and suffer from many of the same drawbacks as `auto`, with the
-    additional problem that the syntax doesn\'t even cue the reader that
+    additional problem that the syntax doesn't even cue the reader that
     deduction is taking place.
--   It\'s possible for use of lambdas to get out of hand; very long
+  - It's possible for use of lambdas to get out of hand; very long
     nested anonymous functions can make code harder to understand.
 
-```{=html}
 <!-- -->
-```
--   Use lambda expressions where appropriate, with formatting as
+
+  - Use lambda expressions where appropriate, with formatting as
     described [below](#Formatting_Lambda_Expressions).
 
--   Prefer explicit captures if the lambda may escape the current scope.
+  - Prefer explicit captures if the lambda may escape the current scope.
     For example, instead of:
 
-    ``` {.badcode}
+    ``` cpp
     {
       Foo foo;
       ...
@@ -2980,35 +3005,37 @@ rules as `auto`.
 
     prefer to write:
 
-        {
-          Foo foo;
-          ...
-          executor->Schedule([&foo] { Frobnicate(foo); })
-          ...
-        }
-        // BETTER - The compile will fail if `Frobnicate` is a member
-        // function, and it's clearer that `foo` is dangerously captured by
-        // reference.
+      ``` cpp
+      {
+        Foo foo;
+        ...
+        executor->Schedule([&foo] { Frobnicate(foo); })
+        ...
+      }
+      // BETTER - The compile will fail if `Frobnicate` is a member
+      // function, and it's clearer that `foo` is dangerously captured by
+      // reference.
+      ```
 
--   Use default capture by reference (\[&\]) only when the lifetime of
+  - Use default capture by reference (\[&\]) only when the lifetime of
     the lambda is obviously shorter than any potential captures.
 
--   Use default capture by value (\[=\]) only as a means of binding a
+  - Use default capture by value (\[=\]) only as a means of binding a
     few variables for a short lambda, where the set of captured
     variables is obvious at a glance. Prefer not to write long or
     complex lambdas with default capture by value.
 
--   Use captures only to actually capture variables from the enclosing
+  - Use captures only to actually capture variables from the enclosing
     scope. Do not use captures with initializers to introduce new names,
     or to substantially change the meaning of an existing name. Instead,
     declare a new variable in the conventional way and then capture it,
     or avoid the lambda shorthand and define a function object
     explicitly.
 
--   See the section on [type deduction](#Type_deduction) for guidance on
+  - See the section on [type deduction](#Type_deduction) for guidance on
     specifying the parameter and return types.
 
-### Template metaprogramming {#Template_metaprogramming}
+### Template metaprogramming
 
 Avoid complicated template programming.
 
@@ -3033,15 +3060,15 @@ wrong.
 
 Template metaprogramming interferes with large scale refactoring by
 making the job of refactoring tools harder. First, the template code is
-expanded in multiple contexts, and it\'s hard to verify that the
+expanded in multiple contexts, and it's hard to verify that the
 transformation makes sense in all of them. Second, some refactoring
 tools work with an AST that only represents the structure of the code
 after template expansion. It can be difficult to automatically work back
 to the original source construct that needs to be rewritten.
 
 Template metaprogramming sometimes allows cleaner and easier-to-use
-interfaces than would be possible without it, but it\'s also often a
-temptation to be overly clever. It\'s best used in a small number of low
+interfaces than would be possible without it, but it's also often a
+temptation to be overly clever. It's best used in a small number of low
 level components where the extra maintenance burden is spread out over a
 large number of uses.
 
@@ -3051,10 +3078,10 @@ will be able to understand your code well enough to maintain it after
 you switch to another project, or whether a non-C++ programmer or
 someone casually browsing the code base will be able to understand the
 error messages or trace the flow of a function they want to call. If
-you\'re using recursive template instantiations or type lists or
+you're using recursive template instantiations or type lists or
 metafunctions or expression templates, or relying on SFINAE or on the
-`sizeof` trick for detecting function overload resolution, then there\'s
-a good chance you\'ve gone too far.
+`sizeof` trick for detecting function overload resolution, then there's
+a good chance you've gone too far.
 
 If you use template metaprogramming, you should expect to put
 considerable effort into minimizing and isolating the complexity. You
@@ -3062,13 +3089,13 @@ should hide metaprogramming as an implementation detail whenever
 possible, so that user-facing headers are readable, and you should make
 sure that tricky code is especially well commented. You should carefully
 document how the code is used, and you should say something about what
-the \"generated\" code looks like. Pay extra attention to the error
+the "generated" code looks like. Pay extra attention to the error
 messages that the compiler emits when users make mistakes. The error
 messages are part of your user interface, and your code should be
 tweaked as necessary so that the error messages are understandable and
 actionable from a user point of view.
 
-### Boost {#Boost}
+### Boost
 
 Use only approved libraries from the Boost library collection.
 
@@ -3081,7 +3108,7 @@ better binders.
 
 Some Boost libraries encourage coding practices which can hamper
 readability, such as metaprogramming and other advanced template
-techniques, and an excessively \"functional\" style of programming.
+techniques, and an excessively "functional" style of programming.
 
 <div>
 
@@ -3089,45 +3116,45 @@ In order to maintain a high level of readability for all contributors
 who might read and maintain code, we only allow an approved subset of
 Boost features. Currently, the following libraries are permitted:
 
--   [Call Traits](https://www.boost.org/libs/utility/call_traits.htm)
+  - [Call Traits](https://www.boost.org/libs/utility/call_traits.htm)
     from `boost/call_traits.hpp`
--   [Compressed
+  - [Compressed
     Pair](https://www.boost.org/libs/utility/compressed_pair.htm) from
     `boost/compressed_pair.hpp`
--   [The Boost Graph Library (BGL)](https://www.boost.org/libs/graph/)
+  - [The Boost Graph Library (BGL)](https://www.boost.org/libs/graph/)
     from `boost/graph`, except serialization (`adj_list_serialize.hpp`)
     and parallel/distributed algorithms and data structures
     (`boost/graph/parallel/*` and `boost/graph/distributed/*`).
--   [Property Map](https://www.boost.org/libs/property_map/) from
+  - [Property Map](https://www.boost.org/libs/property_map/) from
     `boost/property_map`, except parallel/distributed property maps
     (`boost/property_map/parallel/*`).
--   [Iterator](https://www.boost.org/libs/iterator/) from
+  - [Iterator](https://www.boost.org/libs/iterator/) from
     `boost/iterator`
--   The part of [Polygon](https://www.boost.org/libs/polygon/) that
-    deals with Voronoi diagram construction and doesn\'t depend on the
+  - The part of [Polygon](https://www.boost.org/libs/polygon/) that
+    deals with Voronoi diagram construction and doesn't depend on the
     rest of Polygon: `boost/polygon/voronoi_builder.hpp`,
     `boost/polygon/voronoi_diagram.hpp`, and
     `boost/polygon/voronoi_geometry_type.hpp`
--   [Bimap](https://www.boost.org/libs/bimap/) from `boost/bimap`
--   [Statistical Distributions and
+  - [Bimap](https://www.boost.org/libs/bimap/) from `boost/bimap`
+  - [Statistical Distributions and
     Functions](https://www.boost.org/libs/math/doc/html/dist.html) from
     `boost/math/distributions`
--   [Special
+  - [Special
     Functions](https://www.boost.org/libs/math/doc/html/special.html)
     from `boost/math/special_functions`
--   [Root Finding
+  - [Root Finding
     Functions](https://www.boost.org/libs/math/doc/html/root_finding.html)
     from `boost/math/tools`
--   [Multi-index](https://www.boost.org/libs/multi_index/) from
+  - [Multi-index](https://www.boost.org/libs/multi_index/) from
     `boost/multi_index`
--   [Heap](https://www.boost.org/libs/heap/) from `boost/heap`
--   The flat containers from
+  - [Heap](https://www.boost.org/libs/heap/) from `boost/heap`
+  - The flat containers from
     [Container](https://www.boost.org/libs/container/):
     `boost/container/flat_map`, and `boost/container/flat_set`
--   [Intrusive](https://www.boost.org/libs/intrusive/) from
+  - [Intrusive](https://www.boost.org/libs/intrusive/) from
     `boost/intrusive`.
--   [The `boost/sort` library](https://www.boost.org/libs/sort/).
--   [Preprocessor](https://www.boost.org/libs/preprocessor/) from
+  - [The `boost/sort` library](https://www.boost.org/libs/sort/).
+  - [Preprocessor](https://www.boost.org/libs/preprocessor/) from
     `boost/preprocessor`.
 
 We are actively considering adding other Boost features to the list, so
@@ -3135,33 +3162,33 @@ this list may be expanded in the future.
 
 </div>
 
-### std::hash {#std_hash}
+### std::hash
 
 Do not define specializations of `std::hash`.
 
 `std::hash<T>` is the function object that the C++11 hash containers use
 to hash keys of type `T`, unless the user explicitly specifies a
-different hash function. For example,
-`std::unordered_map<int, std::string>` is a hash map that uses
-`std::hash<int>` to hash its keys, whereas
-`std::unordered_map<int, std::string, MyIntHash>` uses `MyIntHash`.
+different hash function. For example, `std::unordered_map<int,
+std::string>` is a hash map that uses `std::hash<int>` to hash its keys,
+whereas `std::unordered_map<int, std::string, MyIntHash>` uses
+`MyIntHash`.
 
 `std::hash` is defined for all integral, floating-point, pointer, and
 `enum` types, as well as some standard library types such as `string`
 and `unique_ptr`. Users can enable it to work for their own types by
 defining specializations of it for those types.
 
-`std::hash` is easy to use, and simplifies the code since you don\'t
-have to name it explicitly. Specializing `std::hash` is the standard way
-of specifying how to hash a type, so it\'s what outside resources will
+`std::hash` is easy to use, and simplifies the code since you don't have
+to name it explicitly. Specializing `std::hash` is the standard way of
+specifying how to hash a type, so it's what outside resources will
 teach, and what new engineers will expect.
 
 `std::hash` is hard to specialize. It requires a lot of boilerplate
 code, and more importantly, it combines responsibility for identifying
 the hash inputs with responsibility for executing the hashing algorithm
 itself. The type author has to be responsible for the former, but the
-latter requires expertise that a type author usually doesn\'t have, and
-shouldn\'t need. The stakes here are high because low-quality hash
+latter requires expertise that a type author usually doesn't have, and
+shouldn't need. The stakes here are high because low-quality hash
 functions can be security vulnerabilities, due to the emergence of [hash
 flooding
 attacks](https://emboss.github.io/blog/2012/12/14/breaking-murmur-hash-flooding-dos-reloaded/).
@@ -3178,8 +3205,8 @@ Due to exactly that issue, `std::hash` does not work with `std::pair` or
 `std::tuple`, and the language does not allow us to extend it to support
 them.
 
-You can use `std::hash` with the types that it supports \"out of the
-box\", but do not specialize it to support additional types. If you need
+You can use `std::hash` with the types that it supports "out of the
+box", but do not specialize it to support additional types. If you need
 a hash table with a key type that `std::hash` does not support, consider
 using legacy hash containers (e.g., `hash_map`) for now; they use a
 different default hasher, which is unaffected by this prohibition.
@@ -3189,143 +3216,144 @@ specify a custom hasher for the key type, e.g.,
 
     std::unordered_map<MyKeyType, Value, MyKeyTypeHasher> my_map;
 
-Consult with the type\'s owners to see if there is an existing hasher
+Consult with the type's owners to see if there is an existing hasher
 that you can use; otherwise work with them to provide one, or roll your
 own.
 
 We are planning to provide a hash function that can work with any type,
-using a new customization mechanism that doesn\'t have the drawbacks of
+using a new customization mechanism that doesn't have the drawbacks of
 `std::hash`.
 
-### [Other C++ Features]{#C++11} {#Other_Features}
+### \[Other C++ Features\]{\#C++11}
 
 As with [Boost](#Boost), some modern C++ extensions encourage coding
-practices that hamper readability---for example by removing checked
+practices that hamper readability—for example by removing checked
 redundancy (such as type names) that may be helpful to readers, or by
 encouraging template metaprogramming. Other extensions duplicate
 functionality available through existing mechanisms, which may lead to
 confusion and conversion costs.
 
-In addition to what\'s described in the rest of the style guide, the
+In addition to what's described in the rest of the style guide, the
 following C++ features may not be used:
 
--   Compile-time rational numbers (`<ratio>`), because of concerns that
-    it\'s tied to a more template-heavy interface style.
--   The `<cfenv>` and `<fenv.h>` headers, because many compilers do not
+  - Compile-time rational numbers (`<ratio>`), because of concerns that
+    it's tied to a more template-heavy interface style.
+  - The `<cfenv>` and `<fenv.h>` headers, because many compilers do not
     support those features reliably.
--   The `<filesystem>` header, which does not have sufficient support
+  - The `<filesystem>` header, which does not have sufficient support
     for testing, and suffers from inherent security vulnerabilities.
 
-### Nonstandard Extensions {#Nonstandard_Extensions}
+### Nonstandard Extensions
 
 Nonstandard extensions to C++ may not be used unless otherwise
 specified.
 
 Compilers support various extensions that are not part of standard C++.
-Such extensions include GCC\'s `__attribute__`, intrinsic functions such
+Such extensions include GCC's `__attribute__`, intrinsic functions such
 as `__builtin_prefetch`, inline assembly, `__COUNTER__`,
-`__PRETTY_FUNCTION__`, compound statement expressions (e.g.,
-`foo = ({ int x; Bar(&x); x })`, variable-length arrays and `alloca()`,
-and the \"[Elvis
-Operator](https://en.wikipedia.org/wiki/Elvis_operator)\" `a?:b`.
+`__PRETTY_FUNCTION__`, compound statement expressions (e.g., `foo = ({
+int x; Bar(&x); x })`, variable-length arrays and `alloca()`, and the
+"[Elvis Operator](https://en.wikipedia.org/wiki/Elvis_operator)" `a?:b`.
 
--   Nonstandard extensions may provide useful features that do not exist
+  - Nonstandard extensions may provide useful features that do not exist
     in standard C++.
--   Important performance guidance to the compiler can only be specified
+  - Important performance guidance to the compiler can only be specified
     using extensions.
 
-```{=html}
 <!-- -->
-```
--   Nonstandard extensions do not work in all compilers. Use of
+
+  - Nonstandard extensions do not work in all compilers. Use of
     nonstandard extensions reduces portability of code.
--   Even if they are supported in all targeted compilers, the extensions
+  - Even if they are supported in all targeted compilers, the extensions
     are often not well-specified, and there may be subtle behavior
     differences between compilers.
--   Nonstandard extensions add to the language features that a reader
+  - Nonstandard extensions add to the language features that a reader
     must know to understand the code.
 
 Do not use nonstandard extensions. You may use portability wrappers that
 are implemented using nonstandard extensions, so long as those wrappers
 are provided by a designated project-wide portability header.
 
-### Aliases {#Aliases}
+### Aliases
 
-Public aliases are for the benefit of an API\'s user, and should be
+Public aliases are for the benefit of an API's user, and should be
 clearly documented.
 
 There are several ways to create names that are aliases of other
 entities:
 
-    typedef Foo Bar;
-    using Bar = Foo;
-    using other_namespace::Foo;
+``` cpp
+typedef Foo Bar;
+using Bar = Foo;
+using other_namespace::Foo;
+```
 
 In new code, `using` is preferable to `typedef`, because it provides a
 more consistent syntax with the rest of C++ and works with templates.
 
 Like other declarations, aliases declared in a header file are part of
-that header\'s public API unless they\'re in a function definition, in
-the private portion of a class, or in an explicitly-marked internal
+that header's public API unless they're in a function definition, in the
+private portion of a class, or in an explicitly-marked internal
 namespace. Aliases in such areas or in .cc files are implementation
-details (because client code can\'t refer to them), and are not
+details (because client code can't refer to them), and are not
 restricted by this rule.
 
--   Aliases can improve readability by simplifying a long or complicated
+  - Aliases can improve readability by simplifying a long or complicated
     name.
--   Aliases can reduce duplication by naming in one place a type used
+  - Aliases can reduce duplication by naming in one place a type used
     repeatedly in an API, which *might* make it easier to change the
     type later.
 
-```{=html}
 <!-- -->
-```
--   When placed in a header where client code can refer to them, aliases
-    increase the number of entities in that header\'s API, increasing
-    its complexity.
--   Clients can easily rely on unintended details of public aliases,
+
+  - When placed in a header where client code can refer to them, aliases
+    increase the number of entities in that header's API, increasing its
+    complexity.
+  - Clients can easily rely on unintended details of public aliases,
     making changes difficult.
--   It can be tempting to create a public alias that is only intended
+  - It can be tempting to create a public alias that is only intended
     for use in the implementation, without considering its impact on the
     API, or on maintainability.
--   Aliases can create risk of name collisions
--   Aliases can reduce readability by giving a familiar construct an
+  - Aliases can create risk of name collisions
+  - Aliases can reduce readability by giving a familiar construct an
     unfamiliar name
--   Type aliases can create an unclear API contract: it is unclear
+  - Type aliases can create an unclear API contract: it is unclear
     whether the alias is guaranteed to be identical to the type it
     aliases, to have the same API, or only to be usable in specified
     narrow ways
 
-Don\'t put an alias in your public API just to save typing in the
+Don't put an alias in your public API just to save typing in the
 implementation; do so only if you intend it to be used by your clients.
 
 When defining a public alias, document the intent of the new name,
 including whether it is guaranteed to always be the same as the type
-it\'s currently aliased to, or whether a more limited compatibility is
+it's currently aliased to, or whether a more limited compatibility is
 intended. This lets the user know whether they can treat the types as
 substitutable or whether more specific rules must be followed, and can
 help the implementation retain some degree of freedom to change the
 alias.
 
-Don\'t put namespace aliases in your public API. (See also
+Don't put namespace aliases in your public API. (See also
 [Namespaces](#Namespaces)).
 
 For example, these aliases document how they are intended to be used in
 client code:
 
-    namespace mynamespace {
-    // Used to store field measurements. DataPoint may change from Bar* to some internal type.
-    // Client code should treat it as an opaque pointer.
-    using DataPoint = foo::Bar*;
+``` cpp
+namespace mynamespace {
+// Used to store field measurements. DataPoint may change from Bar* to some internal type.
+// Client code should treat it as an opaque pointer.
+using DataPoint = foo::Bar*;
 
-    // A set of measurements. Just an alias for user convenience.
-    using TimeSeries = std::unordered_set<DataPoint, std::hash<DataPoint>, DataPointComparator>;
-    }  // namespace mynamespace
+// A set of measurements. Just an alias for user convenience.
+using TimeSeries = std::unordered_set<DataPoint, std::hash<DataPoint>, DataPointComparator>;
+}  // namespace mynamespace
+```
 
-These aliases don\'t document intended use, and half of them aren\'t
-meant for client use:
+These aliases don't document intended use, and half of them aren't meant
+for client use:
 
-``` {.badcode}
+``` cpp
 namespace mynamespace {
 // Bad: none of these say how they should be used.
 using DataPoint = ::foo::Bar*;
@@ -3339,11 +3367,12 @@ However, local convenience aliases are fine in function definitions,
 private sections of classes, explicitly marked internal namespaces, and
 in .cc files:
 
-    // In a .cc file
-    using ::foo::Bar;
+``` cpp
+// In a .cc file
+using ::foo::Bar;
+```
 
-Naming {#Naming}
-------
+## Naming
 
 The most important consistency rules are those that govern naming. The
 style of a name immediately informs us what sort of thing the named
@@ -3356,7 +3385,7 @@ Naming rules are pretty arbitrary, but we feel that consistency is more
 important than individual preferences in this area, so regardless of
 whether you find them sensible or not, the rules are the rules.
 
-### General Naming Rules {#General_Naming_Rules}
+### General Naming Rules
 
 Optimize for readability using names that would be clear even to people
 on a different team.
@@ -3367,29 +3396,31 @@ your code immediately understandable by a new reader. Minimize the use
 of abbreviations that would likely be unknown to someone outside your
 project (especially acronyms and initialisms). Do not abbreviate by
 deleting letters within a word. As a rule of thumb, an abbreviation is
-probably OK if it\'s listed in Wikipedia. Generally speaking,
-descriptiveness should be proportional to the name\'s scope of
+probably OK if it's listed in Wikipedia. Generally speaking,
+descriptiveness should be proportional to the name's scope of
 visibility. For example, `n` may be a fine name within a 5-line
-function, but within the scope of a class, it\'s likely too vague.
+function, but within the scope of a class, it's likely too vague.
 
-    class MyClass {
-     public:
-      int CountFooErrors(const std::vector<Foo>& foos) {
-        int n = 0;  // Clear meaning given limited scope and context
-        for (const auto& foo : foos) {
-          ...
-          ++n;
-        }
-        return n;
-      }
-      void DoSomethingImportant() {
-        std::string fqdn = ...;  // Well-known abbreviation for Fully Qualified Domain Name
-      }
-     private:
-      const int kMaxAllowedConnections = ...;  // Clear meaning within context
-    };
+``` cpp
+class MyClass {
+ public:
+  int CountFooErrors(const std::vector<Foo>& foos) {
+    int n = 0;  // Clear meaning given limited scope and context
+    for (const auto& foo : foos) {
+      ...
+      ++n;
+    }
+    return n;
+  }
+  void DoSomethingImportant() {
+    std::string fqdn = ...;  // Well-known abbreviation for Fully Qualified Domain Name
+  }
+ private:
+  const int kMaxAllowedConnections = ...;  // Clear meaning within context
+};
+```
 
-``` {.badcode}
+``` cpp
 class MyClass {
  public:
   int CountFooErrors(const std::vector<Foo>& foos) {
@@ -3411,12 +3442,12 @@ class MyClass {
 Note that certain universally-known abbreviations are OK, such as `i`
 for an iteration variable and `T` for a template parameter.
 
-For the purposes of the naming rules below, a \"word\" is anything that
+For the purposes of the naming rules below, a "word" is anything that
 you would write in English without internal spaces. This includes
 abbreviations, such as acronyms and initialisms. For names written in
-mixed case (also sometimes referred to as \"[camel
-case](https://en.wikipedia.org/wiki/Camel_case)\" or \"[Pascal
-case](https://en.wiktionary.org/wiki/Pascal_case)\"), in which the first
+mixed case (also sometimes referred to as "[camel
+case](https://en.wikipedia.org/wiki/Camel_case)" or "[Pascal
+case](https://en.wiktionary.org/wiki/Pascal_case)"), in which the first
 letter of each word is capitalized, prefer to capitalize abbreviations
 as single words, e.g., `StartRpc()` rather than `StartRPC()`.
 
@@ -3425,18 +3456,18 @@ type template parameters should follow the rules for [type
 names](#Type_Names), and non-type template parameters should follow the
 rules for [variable names](#Variable_Names).
 
-### File Names {#File_Names}
+### File Names
 
 Filenames should be all lowercase and can include underscores (`_`) or
 dashes (`-`). Follow the convention that your project uses. If there is
-no consistent local pattern to follow, prefer \"\_\".
+no consistent local pattern to follow, prefer "\_".
 
 Examples of acceptable file names:
 
--   `my_useful_class.cc`
--   `my-useful-class.cc`
--   `myusefulclass.cc`
--   `myusefulclass_test.cc // _unittest and _regtest are deprecated.`
+  - `my_useful_class.cc`
+  - `my-useful-class.cc`
+  - `myusefulclass.cc`
+  - `myusefulclass_test.cc // _unittest and _regtest are deprecated.`
 
 C++ files should end in `.cc` and header files should end in `.h`. Files
 that rely on being textually included at specific points should end in
@@ -3451,31 +3482,33 @@ In general, make your filenames very specific. For example, use
 a pair of files called, e.g., `foo_bar.h` and `foo_bar.cc`, defining a
 class called `FooBar`.
 
-### Type Names {#Type_Names}
+### Type Names
 
 Type names start with a capital letter and have a capital letter for
 each new word, with no underscores: `MyExcitingClass`, `MyExcitingEnum`.
 
-The names of all types --- classes, structs, type aliases, enums, and
-type template parameters --- have the same naming convention. Type names
-should start with a capital letter and have a capital letter for each
-new word. No underscores. For example:
+The names of all types — classes, structs, type aliases, enums, and type
+template parameters — have the same naming convention. Type names should
+start with a capital letter and have a capital letter for each new word.
+No underscores. For example:
 
-    // classes and structs
-    class UrlTable { ...
-    class UrlTableTester { ...
-    struct UrlTableProperties { ...
+``` cpp
+// classes and structs
+class UrlTable { ...
+class UrlTableTester { ...
+struct UrlTableProperties { ...
 
-    // typedefs
-    typedef hash_map<UrlTableProperties *, std::string> PropertiesMap;
+// typedefs
+typedef hash_map<UrlTableProperties *, std::string> PropertiesMap;
 
-    // using aliases
-    using PropertiesMap = hash_map<UrlTableProperties *, std::string>;
+// using aliases
+using PropertiesMap = hash_map<UrlTableProperties *, std::string>;
 
-    // enums
-    enum class UrlTableError { ...
+// enums
+enum class UrlTableError { ...
+```
 
-### Variable Names {#Variable_Names}
+### Variable Names
 
 The names of variables (including function parameters) and data members
 are all lowercase, with underscores between words. Data members of
@@ -3487,9 +3520,11 @@ instance: `a_local_variable`, `a_struct_data_member`,
 
 For example:
 
-    std::string table_name;  // OK - lowercase with underscore.
+``` cpp
+std::string table_name;  // OK - lowercase with underscore.
+```
 
-``` {.badcode}
+``` cpp
 std::string tableName;   // Bad - mixed case.
 ```
 
@@ -3498,12 +3533,14 @@ std::string tableName;   // Bad - mixed case.
 Data members of classes, both static and non-static, are named like
 ordinary nonmember variables, but with a trailing underscore.
 
-    class TableInfo {
-      ...
-     private:
-      std::string table_name_;  // OK - underscore at end.
-      static Pool<TableInfo>* pool_;  // OK.
-    };
+``` cpp
+class TableInfo {
+  ...
+ private:
+  std::string table_name_;  // OK - underscore at end.
+  static Pool<TableInfo>* pool_;  // OK.
+};
+```
 
 #### Struct Data Members
 
@@ -3511,24 +3548,28 @@ Data members of structs, both static and non-static, are named like
 ordinary nonmember variables. They do not have the trailing underscores
 that data members in classes have.
 
-    struct UrlTableProperties {
-      std::string name;
-      int num_entries;
-      static Pool<UrlTableProperties>* pool;
-    };
+``` cpp
+struct UrlTableProperties {
+  std::string name;
+  int num_entries;
+  static Pool<UrlTableProperties>* pool;
+};
+```
 
-See [Structs vs. Classes](#Structs_vs._Classes) for a discussion of when
+See [Structs vs. Classes](#Structs_vs._Classes) for a discussion of when
 to use a struct versus a class.
 
-### Constant Names {#Constant_Names}
+### Constant Names
 
 Variables declared constexpr or const, and whose value is fixed for the
-duration of the program, are named with a leading \"k\" followed by
-mixed case. Underscores can be used as separators in the rare cases
-where capitalization cannot be used for separation. For example:
+duration of the program, are named with a leading "k" followed by mixed
+case. Underscores can be used as separators in the rare cases where
+capitalization cannot be used for separation. For example:
 
-    const int kDaysInAWeek = 7;
-    const int kAndroid8_0_0 = 24;  // Android 8.0.0
+``` cpp
+const int kDaysInAWeek = 7;
+const int kAndroid8_0_0 = 24;  // Android 8.0.0
+```
 
 All such variables with static storage duration (i.e., statics and
 globals, see [Storage
@@ -3537,7 +3578,7 @@ for details) should be named this way. This convention is optional for
 variables of other storage classes, e.g., automatic variables, otherwise
 the usual variable naming rules apply.
 
-### Function Names {#Function_Names}
+### Function Names
 
 Regular functions have mixed case; accessors and mutators may be named
 like variables.
@@ -3545,21 +3586,23 @@ like variables.
 Ordinarily, functions should start with a capital letter and have a
 capital letter for each new word.
 
-    AddTableEntry()
-    DeleteUrl()
-    OpenFileOrDie()
+``` cpp
+AddTableEntry()
+DeleteUrl()
+OpenFileOrDie()
+```
 
 (The same naming rule applies to class- and namespace-scope constants
 that are exposed as part of an API and that are intended to look like
-functions, because the fact that they\'re objects rather than functions
+functions, because the fact that they're objects rather than functions
 is an unimportant implementation detail.)
 
 Accessors and mutators (get and set functions) may be named like
 variables. These often correspond to actual member variables, but this
-is not required. For example, `int count()` and
-`void set_count(int count)`.
+is not required. For example, `int count()` and `void set_count(int
+count)`.
 
-### Namespace Names {#Namespace_Names}
+### Namespace Names
 
 Namespace names are all lower-case. Top-level namespace names are based
 on the project name . Avoid collisions between nested namespaces and
@@ -3573,7 +3616,7 @@ the namespace name (or in subdirectories thereof).
 Keep in mind that the [rule against abbreviated
 names](#General_Naming_Rules) applies to namespaces just as much as
 variable names. Code inside the namespace seldom needs to mention the
-namespace name, so there\'s usually no particular need for abbreviation
+namespace name, so there's usually no particular need for abbreviation
 anyway.
 
 Avoid nested namespaces that match well-known top-level namespaces.
@@ -3589,19 +3632,21 @@ tend to be related and may lead to collisions). In such a situation,
 using the filename to make a unique internal name is helpful
 (`websearch::index::frobber_internal` for use in `frobber.h`)
 
-### Enumerator Names {#Enumerator_Names}
+### Enumerator Names
 
 Enumerators (for both scoped and unscoped enums) should be named like
 [constants](#Constant_Names), not like [macros](#Macro_Names). That is,
 use `kEnumName` not `ENUM_NAME`.
 
-    enum class UrlTableError {
-      kOk = 0,
-      kOutOfMemory,
-      kMalformedInput,
-    };
+``` cpp
+enum class UrlTableError {
+  kOk = 0,
+  kOutOfMemory,
+  kMalformedInput,
+};
+```
 
-``` {.badcode}
+``` cpp
 enum class AlternateUrlTableError {
   OK = 0,
   OUT_OF_MEMORY = 1,
@@ -3615,41 +3660,38 @@ between enum values and macros. Hence, the change to prefer
 constant-style naming was put in place. New code should use
 constant-style naming.
 
-### Macro Names {#Macro_Names}
+### Macro Names
 
-You\'re not really going to [define a macro](#Preprocessor_Macros), are
-you? If you do, they\'re like this:
+You're not really going to [define a macro](#Preprocessor_Macros), are
+you? If you do, they're like this:
 `MY_MACRO_THAT_SCARES_SMALL_CHILDREN_AND_ADULTS_ALIKE`.
 
 Please see the [description of macros](#Preprocessor_Macros); in general
 macros should *not* be used. However, if they are absolutely needed,
 then they should be named with all capitals and underscores.
 
-    #define ROUND(x) ...
-    #define PI_ROUNDED 3.0
+``` cpp
+#define ROUND(x) ...
+#define PI_ROUNDED 3.0
+```
 
-### Exceptions to Naming Rules {#Exceptions_to_Naming_Rules}
+### Exceptions to Naming Rules
 
 If you are naming something that is analogous to an existing C or C++
 entity then you can follow the existing naming convention scheme.
 
-`bigopen()`
-:   function name, follows form of `open()`
+  - `bigopen()`
+    function name, follows form of `open()`
+  - `uint`
+    `typedef`
+  - `bigpos`
+    `struct` or `class`, follows form of `pos`
+  - `sparse_hash_map`
+    STL-like entity; follows STL naming conventions
+  - `LONGLONG_MAX`
+    a constant, as in `INT_MAX`
 
-`uint`
-:   `typedef`
-
-`bigpos`
-:   `struct` or `class`, follows form of `pos`
-
-`sparse_hash_map`
-:   STL-like entity; follows STL naming conventions
-
-`LONGLONG_MAX`
-:   a constant, as in `INT_MAX`
-
-Comments {#Comments}
---------
+## Comments
 
 Comments are absolutely vital to keeping our code readable. The
 following rules describe what you should comment and where. But
@@ -3659,10 +3701,10 @@ better than using obscure names that you must then explain through
 comments.
 
 When writing your comments, write for your audience: the next
-contributor who will need to understand your code. Be generous --- the
-next one may be you!
+contributor who will need to understand your code. Be generous — the
+next one may be you\!
 
-### Comment Style {#Comment_Style}
+### Comment Style
 
 Use either the `//` or `/* */` syntax, as long as you are consistent.
 
@@ -3670,7 +3712,7 @@ You can use either the `//` or the `/* */` syntax; however, `//` is
 *much* more common. Be consistent with how you comment and what style
 you use where.
 
-### File Comments {#File_Comments}
+### File Comments
 
 <div>
 
@@ -3708,22 +3750,24 @@ abstractions, not at the file level.
 Do not duplicate comments in both the `.h` and the `.cc`. Duplicated
 comments diverge.
 
-### Class Comments {#Class_Comments}
+### Class Comments
 
 Every non-obvious class or struct declaration should have an
 accompanying comment that describes what it is for and how it should be
 used.
 
-    // Iterates over the contents of a GargantuanTable.
-    // Example:
-    //    GargantuanTableIterator* iter = table->NewIterator();
-    //    for (iter->Seek("foo"); !iter->done(); iter->Next()) {
-    //      process(iter->key(), iter->value());
-    //    }
-    //    delete iter;
-    class GargantuanTableIterator {
-      ...
-    };
+``` cpp
+// Iterates over the contents of a GargantuanTable.
+// Example:
+//    GargantuanTableIterator* iter = table->NewIterator();
+//    for (iter->Seek("foo"); !iter->done(); iter->Next()) {
+//      process(iter->key(), iter->value());
+//    }
+//    delete iter;
+class GargantuanTableIterator {
+  ...
+};
+```
 
 The class comment should provide the reader with enough information to
 know how and when to use the class, as well as any additional
@@ -3738,9 +3782,9 @@ demonstrating a simple and focused usage of the class.
 When sufficiently separated (e.g., `.h` and `.cc` files), comments
 describing the use of the class should go together with its interface
 definition; comments about the class operation and implementation should
-accompany the implementation of the class\'s methods.
+accompany the implementation of the class's methods.
 
-### Function Comments {#Function_Comments}
+### Function Comments
 
 Declaration comments describe use of the function (when it is
 non-obvious); comments at the definition of a function describe
@@ -3753,41 +3797,43 @@ preceding it that describe what the function does and how to use it.
 These comments may be omitted only if the function is simple and obvious
 (e.g., simple accessors for obvious properties of the class). These
 comments should open with descriptive verbs in the indicative mood
-(\"Opens the file\") rather than verbs in the imperative (\"Open the
-file\"). The comment describes the function; it does not tell the
+("Opens the file") rather than verbs in the imperative ("Open the
+file"). The comment describes the function; it does not tell the
 function what to do. In general, these comments do not describe how the
 function performs its task. Instead, that should be left to comments in
 the function definition.
 
 Types of things to mention in comments at the function declaration:
 
--   What the inputs and outputs are.
--   For class member functions: whether the object remembers reference
+  - What the inputs and outputs are.
+  - For class member functions: whether the object remembers reference
     arguments beyond the duration of the method call, and whether it
     will free them or not.
--   If the function allocates memory that the caller must free.
--   Whether any of the arguments can be a null pointer.
--   If there are any performance implications of how a function is used.
--   If the function is re-entrant. What are its synchronization
+  - If the function allocates memory that the caller must free.
+  - Whether any of the arguments can be a null pointer.
+  - If there are any performance implications of how a function is used.
+  - If the function is re-entrant. What are its synchronization
     assumptions?
 
 Here is an example:
 
-    // Returns an iterator for this table.  It is the client's
-    // responsibility to delete the iterator when it is done with it,
-    // and it must not use the iterator once the GargantuanTable object
-    // on which the iterator was created has been deleted.
-    //
-    // The iterator is initially positioned at the beginning of the table.
-    //
-    // This method is equivalent to:
-    //    Iterator* iter = table->NewIterator();
-    //    iter->Seek("");
-    //    return iter;
-    // If you are going to immediately seek to another place in the
-    // returned iterator, it will be faster to use NewIterator()
-    // and avoid the extra seek.
-    Iterator* GetIterator() const;
+``` cpp
+// Returns an iterator for this table.  It is the client's
+// responsibility to delete the iterator when it is done with it,
+// and it must not use the iterator once the GargantuanTable object
+// on which the iterator was created has been deleted.
+//
+// The iterator is initially positioned at the beginning of the table.
+//
+// This method is equivalent to:
+//    Iterator* iter = table->NewIterator();
+//    iter->Seek("");
+//    return iter;
+// If you are going to immediately seek to another place in the
+// returned iterator, it will be faster to use NewIterator()
+// and avoid the extra seek.
+Iterator* GetIterator() const;
+```
 
 However, do not be unnecessarily verbose or state the completely
 obvious.
@@ -3799,7 +3845,7 @@ documentation and thus no comment is required.
 
 When commenting constructors and destructors, remember that the person
 reading your code knows what constructors and destructors are for, so
-comments that just say something like \"destroys this object\" are not
+comments that just say something like "destroys this object" are not
 useful. Document what constructors do with their arguments (for example,
 if they take ownership of pointers), and what cleanup the destructor
 does. If this is trivial, just skip the comment. It is quite common for
@@ -3817,11 +3863,11 @@ for the first half of the function but why it is not needed for the
 second half.
 
 Note you should *not* just repeat the comments given with the function
-declaration, in the `.h` file or wherever. It\'s okay to recapitulate
+declaration, in the `.h` file or wherever. It's okay to recapitulate
 briefly what the function does, but the focus of the comments should be
 on how it does it.
 
-### Variable Comments {#Variable_Comments}
+### Variable Comments
 
 In general the actual name of the variable should be descriptive enough
 to give a good idea of what the variable is used for. In certain cases,
@@ -3839,10 +3885,12 @@ In particular, add comments to describe the existence and meaning of
 sentinel values, such as nullptr or -1, when they are not obvious. For
 example:
 
-    private:
-     // Used to bounds-check table accesses. -1 means
-     // that we don't yet know how many entries the table has.
-     int num_total_entries_;
+``` cpp
+private:
+ // Used to bounds-check table accesses. -1 means
+ // that we don't yet know how many entries the table has.
+ int num_total_entries_;
+```
 
 #### Global Variables
 
@@ -3850,10 +3898,12 @@ All global variables should have a comment describing what they are,
 what they are used for, and (if unclear) why it needs to be global. For
 example:
 
-    // The total number of tests cases that we run through in this regression test.
-    const int kNumTestCases = 6;
+``` cpp
+// The total number of tests cases that we run through in this regression test.
+const int kNumTestCases = 6;
+```
 
-### Implementation Comments {#Implementation_Comments}
+### Implementation Comments
 
 In your implementation you should have comments in tricky, non-obvious,
 interesting, or important parts of your code.
@@ -3863,13 +3913,15 @@ interesting, or important parts of your code.
 Tricky or complicated code blocks should have comments before them.
 Example:
 
-    // Divide result by two, taking into account that x
-    // contains the carry from the add.
-    for (int i = 0; i < result->size(); ++i) {
-      x = (x << 8) + (*result)[i];
-      (*result)[i] = x >> 1;
-      x &= 1;
-    }
+``` cpp
+// Divide result by two, taking into account that x
+// contains the carry from the add.
+for (int i = 0; i < result->size(); ++i) {
+  x = (x << 8) + (*result)[i];
+  (*result)[i] = x >> 1;
+  x &= 1;
+}
+```
 
 #### Line-end Comments
 
@@ -3877,63 +3929,67 @@ Also, lines that are non-obvious should get a comment at the end of the
 line. These end-of-line comments should be separated from the code by 2
 spaces. Example:
 
-    // If we have enough memory, mmap the data portion too.
-    mmap_budget = max<int64>(0, mmap_budget - index_->length());
-    if (mmap_budget >= data_size_ && !MmapData(mmap_chunk_bytes, mlock))
-      return;  // Error already logged.
+``` cpp
+// If we have enough memory, mmap the data portion too.
+mmap_budget = max<int64>(0, mmap_budget - index_->length());
+if (mmap_budget >= data_size_ && !MmapData(mmap_chunk_bytes, mlock))
+  return;  // Error already logged.
+```
 
 Note that there are both comments that describe what the code is doing,
 and comments that mention that an error has already been logged when the
 function returns.
 
-#### Function Argument Comments {#Function_Argument_Comments .stylepoint_subsection}
+#### Function Argument Comments
 
 When the meaning of a function argument is nonobvious, consider one of
 the following remedies:
 
--   If the argument is a literal constant, and the same constant is used
-    in multiple function calls in a way that tacitly assumes they\'re
-    the same, you should use a named constant to make that constraint
+  - If the argument is a literal constant, and the same constant is used
+    in multiple function calls in a way that tacitly assumes they're the
+    same, you should use a named constant to make that constraint
     explicit, and to guarantee that it holds.
--   Consider changing the function signature to replace a `bool`
+  - Consider changing the function signature to replace a `bool`
     argument with an `enum` argument. This will make the argument values
     self-describing.
--   For functions that have several configuration options, consider
+  - For functions that have several configuration options, consider
     defining a single class or struct to hold all the options , and pass
     an instance of that. This approach has several advantages. Options
     are referenced by name at the call site, which clarifies their
     meaning. It also reduces function argument count, which makes
     function calls easier to read and write. As an added benefit, you
-    don\'t have to change call sites when you add another option.
--   Replace large or complex nested expressions with named variables.
--   As a last resort, use comments to clarify argument meanings at the
+    don't have to change call sites when you add another option.
+  - Replace large or complex nested expressions with named variables.
+  - As a last resort, use comments to clarify argument meanings at the
     call site.
 
 Consider the following example:
 
-``` {.badcode}
+``` cpp
 // What are these arguments?
 const DecimalNumber product = CalculateProduct(values, 7, false, nullptr);
 ```
 
 versus:
 
-    ProductOptions options;
-    options.set_precision_decimals(7);
-    options.set_use_cache(ProductOptions::kDontUseCache);
-    const DecimalNumber product =
-        CalculateProduct(values, options, /*completion_callback=*/nullptr);
+``` cpp
+ProductOptions options;
+options.set_precision_decimals(7);
+options.set_use_cache(ProductOptions::kDontUseCache);
+const DecimalNumber product =
+    CalculateProduct(values, options, /*completion_callback=*/nullptr);
+```
 
-#### Don\'ts {#Implementation_Comment_Donts}
+#### Don'ts
 
-Do not state the obvious. In particular, don\'t literally describe what
+Do not state the obvious. In particular, don't literally describe what
 code does, unless the behavior is nonobvious to a reader who understands
 C++ well. Instead, provide higher level comments that describe *why* the
 code does what it does, or make the code self describing.
 
 Compare this:
 
-``` {.badcode}
+``` cpp
 // Find the element in the vector.  <-- Bad: obvious!
 auto iter = std::find(v.begin(), v.end(), element);
 if (iter != v.end()) {
@@ -3943,20 +3999,24 @@ if (iter != v.end()) {
 
 To this:
 
-    // Process "element" unless it was already processed.
-    auto iter = std::find(v.begin(), v.end(), element);
-    if (iter != v.end()) {
-      Process(element);
-    }
+``` cpp
+// Process "element" unless it was already processed.
+auto iter = std::find(v.begin(), v.end(), element);
+if (iter != v.end()) {
+  Process(element);
+}
+```
 
-Self-describing code doesn\'t need a comment. The comment from the
+Self-describing code doesn't need a comment. The comment from the
 example above would be obvious:
 
-    if (!IsAlreadyProcessed(element)) {
-      Process(element);
-    }
+``` cpp
+if (!IsAlreadyProcessed(element)) {
+  Process(element);
+}
+```
 
-### Punctuation, Spelling, and Grammar {#Punctuation,_Spelling_and_Grammar}
+### Punctuation, Spelling, and Grammar {\#Punctuation,\_Spelling\_and\_Grammar}
 
 Pay attention to punctuation, spelling, and grammar; it is easier to
 read well-written comments than badly written ones.
@@ -3973,7 +4033,7 @@ important that source code maintain a high level of clarity and
 readability. Proper punctuation, spelling, and grammar help with that
 goal.
 
-### TODO Comments {#TODO_Comments}
+### TODO Comments
 
 Use `TODO` comments for code that is temporary, a short-term solution,
 or good-enough but not perfect.
@@ -3986,37 +4046,34 @@ out how to get more details upon request. A `TODO` is not a commitment
 that the person referenced will fix the problem. Thus when you create a
 `TODO` with a name, it is almost always your name that is given.
 
-<div>
+``` cpp
+// TODO(kl@gmail.com): Use a "*" here for concatenation operator.
+// TODO(Zeke) change this to use relations.
+// TODO(bug 12345): remove the "Last visitors" feature.
+```
 
-    // TODO(kl@gmail.com): Use a "*" here for concatenation operator.
-    // TODO(Zeke) change this to use relations.
-    // TODO(bug 12345): remove the "Last visitors" feature.
+If your `TODO` is of the form "At a future date do something" make sure
+that you either include a very specific date ("Fix by November 2005") or
+a very specific event ("Remove this code when all clients can handle XML
+responses.").
 
-</div>
-
-If your `TODO` is of the form \"At a future date do something\" make
-sure that you either include a very specific date (\"Fix by November
-2005\") or a very specific event (\"Remove this code when all clients
-can handle XML responses.\").
-
-Formatting {#Formatting}
-----------
+## Formatting
 
 Coding style and formatting are pretty arbitrary, but a project is much
 easier to follow if everyone uses the same style. Individuals may not
 agree with every aspect of the formatting rules, and some of the rules
 may take some getting used to, but it is important that all project
 contributors follow the style rules so that they can all read and
-understand everyone\'s code easily.
+understand everyone's code easily.
 
 <div>
 
-To help you format code correctly, we\'ve created a [settings file for
+To help you format code correctly, we've created a [settings file for
 emacs](https://raw.githubusercontent.com/google/styleguide/gh-pages/google-c-style.el).
 
 </div>
 
-### Line Length {#Line_Length}
+### Line Length
 
 Each line of text in your code should be at most 80 characters long.
 
@@ -4029,7 +4086,7 @@ already adheres to it, and we feel that consistency is important.
 
 Those who favor this rule argue that it is rude to force them to resize
 their windows and there is no need for anything longer. Some folks are
-used to having several code windows side-by-side, and thus don\'t have
+used to having several code windows side-by-side, and thus don't have
 room to widen their windows in any case. People set up their work
 environment assuming a particular maximum window width, and 80 columns
 has been the traditional standard. Why change it?
@@ -4043,23 +4100,23 @@ longer lines.
 
 A line may exceed 80 characters if it is
 
--   a comment line which is not feasible to split without harming
-    readability, ease of cut and paste or auto-linking \-- e.g., if a
+  - a comment line which is not feasible to split without harming
+    readability, ease of cut and paste or auto-linking -- e.g., if a
     line contains an example command or a literal URL longer than 80
     characters.
--   a raw-string literal with content that exceeds 80 characters. Except
+  - a raw-string literal with content that exceeds 80 characters. Except
     for test code, such literals should appear near the top of a file.
--   an include statement.
--   a [header guard](#The__define_Guard)
--   a using-declaration
+  - an include statement.
+  - a [header guard](#The__define_Guard)
+  - a using-declaration
 
-### Non-ASCII Characters {#Non-ASCII_Characters}
+### Non-ASCII Characters
 
 Non-ASCII characters should be rare, and must use UTF-8 formatting.
 
-You shouldn\'t hard-code user-facing text in source, even English, so
-use of non-ASCII characters should be rare. However, in certain cases it
-is appropriate to include such words in your code. For example, if your
+You shouldn't hard-code user-facing text in source, even English, so use
+of non-ASCII characters should be rare. However, in certain cases it is
+appropriate to include such words in your code. For example, if your
 code parses data files from foreign sources, it may be appropriate to
 hard-code the non-ASCII string(s) used in those data files as
 delimiters. More commonly, unittest code (which does not need to be
@@ -4067,9 +4124,9 @@ localized) might contain non-ASCII strings. In such cases, you should
 use UTF-8, since that is an encoding understood by most tools able to
 handle more than just ASCII.
 
-Hex encoding is also OK, and encouraged where it enhances readability
---- for example, `"\xEF\xBB\xBF"`, or, even more simply, `u8"\uFEFF"`,
-is the Unicode zero-width no-break space character, which would be
+Hex encoding is also OK, and encouraged where it enhances readability —
+for example, `"\xEF\xBB\xBF"`, or, even more simply, `u8"\uFEFF"`, is
+the Unicode zero-width no-break space character, which would be
 invisible if included in the source as straight UTF-8.
 
 Use the `u8` prefix to guarantee that a string literal containing
@@ -4078,19 +4135,19 @@ containing non-ASCII characters encoded as UTF-8, because that will
 produce incorrect output if the compiler does not interpret the source
 file as UTF-8.
 
-You shouldn\'t use the C++11 `char16_t` and `char32_t` character types,
-since they\'re for non-UTF-8 text. For similar reasons you also
-shouldn\'t use `wchar_t` (unless you\'re writing code that interacts
-with the Windows API, which uses `wchar_t` extensively).
+You shouldn't use the C++11 `char16_t` and `char32_t` character types,
+since they're for non-UTF-8 text. For similar reasons you also shouldn't
+use `wchar_t` (unless you're writing code that interacts with the
+Windows API, which uses `wchar_t` extensively).
 
-### Spaces vs. Tabs {#Spaces_vs._Tabs}
+### Spaces vs. Tabs
 
 Use only spaces, and indent 2 spaces at a time.
 
 We use spaces for indentation. Do not use tabs in your code. You should
 set your editor to emit spaces when you hit the tab key.
 
-### Function Declarations and Definitions {#Function_Declarations_and_Definitions}
+### Function Declarations and Definitions
 
 Return type on the same line as function name, parameters on the same
 line if they fit. Wrap parameter lists which do not fit on a single line
@@ -4098,77 +4155,87 @@ as you would wrap arguments in a [function call](#Function_Calls).
 
 Functions look like this:
 
-    ReturnType ClassName::FunctionName(Type par_name1, Type par_name2) {
-      DoSomething();
-      ...
-    }
+``` cpp
+ReturnType ClassName::FunctionName(Type par_name1, Type par_name2) {
+  DoSomething();
+  ...
+}
+```
 
 If you have too much text to fit on one line:
 
-    ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,
-                                                 Type par_name3) {
-      DoSomething();
-      ...
-    }
+``` cpp
+ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,
+                                             Type par_name3) {
+  DoSomething();
+  ...
+}
+```
 
 or if you cannot fit even the first parameter:
 
-    ReturnType LongClassName::ReallyReallyReallyLongFunctionName(
-        Type par_name1,  // 4 space indent
-        Type par_name2,
-        Type par_name3) {
-      DoSomething();  // 2 space indent
-      ...
-    }
+``` cpp
+ReturnType LongClassName::ReallyReallyReallyLongFunctionName(
+    Type par_name1,  // 4 space indent
+    Type par_name2,
+    Type par_name3) {
+  DoSomething();  // 2 space indent
+  ...
+}
+```
 
 Some points to note:
 
--   Choose good parameter names.
--   A parameter name may be omitted only if the parameter is not used in
-    the function\'s definition.
--   If you cannot fit the return type and the function name on a single
+  - Choose good parameter names.
+  - A parameter name may be omitted only if the parameter is not used in
+    the function's definition.
+  - If you cannot fit the return type and the function name on a single
     line, break between them.
--   If you break after the return type of a function declaration or
+  - If you break after the return type of a function declaration or
     definition, do not indent.
--   The open parenthesis is always on the same line as the function
+  - The open parenthesis is always on the same line as the function
     name.
--   There is never a space between the function name and the open
+  - There is never a space between the function name and the open
     parenthesis.
--   There is never a space between the parentheses and the parameters.
--   The open curly brace is always on the end of the last line of the
+  - There is never a space between the parentheses and the parameters.
+  - The open curly brace is always on the end of the last line of the
     function declaration, not the start of the next line.
--   The close curly brace is either on the last line by itself or on the
+  - The close curly brace is either on the last line by itself or on the
     same line as the open curly brace.
--   There should be a space between the close parenthesis and the open
+  - There should be a space between the close parenthesis and the open
     curly brace.
--   All parameters should be aligned if possible.
--   Default indentation is 2 spaces.
--   Wrapped parameters have a 4 space indent.
+  - All parameters should be aligned if possible.
+  - Default indentation is 2 spaces.
+  - Wrapped parameters have a 4 space indent.
 
 Unused parameters that are obvious from context may be omitted:
 
-    class Foo {
-     public:
-      Foo(const Foo&) = delete;
-      Foo& operator=(const Foo&) = delete;
-    };
+``` cpp
+class Foo {
+ public:
+  Foo(const Foo&) = delete;
+  Foo& operator=(const Foo&) = delete;
+};
+```
 
 Unused parameters that might not be obvious should comment out the
 variable name in the function definition:
 
-    class Shape {
-     public:
-      virtual void Rotate(double radians) = 0;
-    };
+``` cpp
+class Shape {
+ public:
+  virtual void Rotate(double radians) = 0;
+};
 
-    class Circle : public Shape {
-     public:
-      void Rotate(double radians) override;
-    };
+class Circle : public Shape {
+ public:
+  void Rotate(double radians) override;
+};
 
-    void Circle::Rotate(double /*radians*/) {}
+void Circle::Rotate(double /*radians*/) {}
+```
 
-``` {.badcode}
+``` cpp
 // Bad - if someone wants to implement later, it's not clear what the
 // variable means.
 void Circle::Rotate(double) {}
@@ -4178,9 +4245,11 @@ Attributes, and macros that expand to attributes, appear at the very
 beginning of the function declaration or definition, before the return
 type:
 
-    ABSL_MUST_USE_RESULT bool IsOk();
+``` cpp
+ABSL_MUST_USE_RESULT bool IsOk();
+```
 
-### Lambda Expressions {#Formatting_Lambda_Expressions}
+### Lambda Expressions
 
 Format parameters and bodies as for any other function, and capture
 lists like other comma-separated lists.
@@ -4188,19 +4257,23 @@ lists like other comma-separated lists.
 For by-reference captures, do not leave a space between the ampersand
 (&) and the variable name.
 
-    int x = 0;
-    auto x_plus_n = [&x](int n) -> int { return x + n; }
+``` cpp
+int x = 0;
+auto x_plus_n = [&x](int n) -> int { return x + n; }
+```
 
 Short lambdas may be written inline as function arguments.
 
-    std::set<int> blacklist = {7, 8, 9};
-    std::vector<int> digits = {3, 9, 1, 8, 4, 7, 1};
-    digits.erase(std::remove_if(digits.begin(), digits.end(), [&blacklist](int i) {
-                   return blacklist.find(i) != blacklist.end();
-                 }),
-                 digits.end());
+``` cpp
+std::set<int> blacklist = {7, 8, 9};
+std::vector<int> digits = {3, 9, 1, 8, 4, 7, 1};
+digits.erase(std::remove_if(digits.begin(), digits.end(), [&blacklist](int i) {
+               return blacklist.find(i) != blacklist.end();
+             }),
+             digits.end());
+```
 
-### Floating-point Literals {#Floating_Literals}
+### Floating-point Literals
 
 Floating-point literals should always have a radix point, with digits on
 both sides, even if they use exponential notation. Readability is
@@ -4212,20 +4285,20 @@ with an integer literal (assuming the variable type can exactly
 represent that integer), but note that a number in exponential notation
 is never an integer literal.
 
-``` {.badcode}
+``` cpp
 float f = 1.f;
 long double ld = -.5L;
 double d = 1248e6;
 ```
 
-``` {.goodcode}
+``` goodcode
 float f = 1.0f;
 float f2 = 1;   // Also OK
 long double ld = -0.5L;
 double d = 1248.0e6;
 ```
 
-### Function Calls {#Function_Calls}
+### Function Calls
 
 Either write the call all on a single line, wrap the arguments at the
 parenthesis, or start the arguments on a new line indented by four
@@ -4235,28 +4308,34 @@ multiple arguments on each line where appropriate.
 
 Function calls have the following format:
 
-    bool result = DoSomething(argument1, argument2, argument3);
+``` cpp
+bool result = DoSomething(argument1, argument2, argument3);
+```
 
 If the arguments do not all fit on one line, they should be broken up
 onto multiple lines, with each subsequent line aligned with the first
 argument. Do not add spaces after the open paren or before the close
 paren:
 
-    bool result = DoSomething(averyveryveryverylongargument1,
-                              argument2, argument3);
+``` cpp
+bool result = DoSomething(averyveryveryverylongargument1,
+                          argument2, argument3);
+```
 
 Arguments may optionally all be placed on subsequent lines with a four
 space indent:
 
-    if (...) {
-      ...
-      ...
-      if (...) {
-        bool result = DoSomething(
-            argument1, argument2,  // 4 space indent
-            argument3, argument4);
-        ...
-      }
+``` cpp
+if (...) {
+  ...
+  ...
+  if (...) {
+    bool result = DoSomething(
+        argument1, argument2,  // 4 space indent
+        argument3, argument4);
+    ...
+  }
+```
 
 Put multiple arguments on a single line to reduce the number of lines
 necessary for calling a function unless there is a specific readability
@@ -4271,14 +4350,18 @@ to the complexity or confusing nature of the expressions that make up
 some arguments, try creating variables that capture those arguments in a
 descriptive name:
 
-    int my_heuristic = scores[x] * y + bases[x];
-    bool result = DoSomething(my_heuristic, x, y, z);
+``` cpp
+int my_heuristic = scores[x] * y + bases[x];
+bool result = DoSomething(my_heuristic, x, y, z);
+```
 
 Or put the confusing argument on its own line with an explanatory
 comment:
 
-    bool result = DoSomething(scores[x] * y + bases[x],  // Score heuristic.
-                              x, y, z);
+``` cpp
+bool result = DoSomething(scores[x] * y + bases[x],  // Score heuristic.
+                          x, y, z);
+```
 
 If there is still a case where one argument is significantly more
 readable on its own line, then put it on its own line. The decision
@@ -4289,12 +4372,14 @@ Sometimes arguments form a structure that is important for readability.
 In those cases, feel free to format the arguments according to that
 structure:
 
-    // Transform the widget by a 3x3 matrix.
-    my_widget.Transform(x1, x2, x3,
-                        y1, y2, y3,
-                        z1, z2, z3);
+``` cpp
+// Transform the widget by a 3x3 matrix.
+my_widget.Transform(x1, x2, x3,
+                    y1, y2, y3,
+                    z1, z2, z3);
+```
 
-### Braced Initializer List Format {#Braced_Initializer_List_Format}
+### Braced Initializer List Format
 
 Format a [braced initializer list](#Braced_Initializer_List) exactly
 like you would format a function call in its place.
@@ -4303,66 +4388,74 @@ If the braced list follows a name (e.g., a type or variable name),
 format as if the `{}` were the parentheses of a function call with that
 name. If there is no name, assume a zero-length name.
 
-    // Examples of braced init list on a single line.
-    return {foo, bar};
-    functioncall({foo, bar});
-    std::pair<int, int> p{foo, bar};
+``` cpp
+// Examples of braced init list on a single line.
+return {foo, bar};
+functioncall({foo, bar});
+std::pair<int, int> p{foo, bar};
 
-    // When you have to wrap.
-    SomeFunction(
-        {"assume a zero-length name before {"},
-        some_other_function_parameter);
-    SomeType variable{
-        some, other, values,
-        {"assume a zero-length name before {"},
-        SomeOtherType{
-            "Very long string requiring the surrounding breaks.",
-            some, other values},
-        SomeOtherType{"Slightly shorter string",
-                      some, other, values}};
-    SomeType variable{
-        "This is too long to fit all in one line"};
-    MyType m = {  // Here, you could also break before {.
-        superlongvariablename1,
-        superlongvariablename2,
-        {short, interior, list},
-        {interiorwrappinglist,
-         interiorwrappinglist2}};
+// When you have to wrap.
+SomeFunction(
+    {"assume a zero-length name before {"},
+    some_other_function_parameter);
+SomeType variable{
+    some, other, values,
+    {"assume a zero-length name before {"},
+    SomeOtherType{
+        "Very long string requiring the surrounding breaks.",
+        some, other values},
+    SomeOtherType{"Slightly shorter string",
+                  some, other, values}};
+SomeType variable{
+    "This is too long to fit all in one line"};
+MyType m = {  // Here, you could also break before {.
+    superlongvariablename1,
+    superlongvariablename2,
+    {short, interior, list},
+    {interiorwrappinglist,
+     interiorwrappinglist2}};
+```
 
-### Conditionals {#Conditionals}
+### Conditionals
 
 The `if` and `else` keywords belong on separate lines. There should be a
 space between the `if` and the open parenthesis, and between the close
 parenthesis and the curly brace (if any), but no space between the
 parentheses and the condition.
 
-    if (condition) {  // no spaces inside parentheses
-      ...  // 2 space indent.
-    } else if (...) {  // The else goes on the same line as the closing brace.
-      ...
-    } else {
-      ...
-    }
+``` cpp
+if (condition) {  // no spaces inside parentheses
+  ...  // 2 space indent.
+} else if (...) {  // The else goes on the same line as the closing brace.
+  ...
+} else {
+  ...
+}
+```
 
-``` {.badcode}
+``` cpp
 if(condition) {   // Bad - space missing after IF.
 if ( condition ) { // Bad - space between the parentheses and the condition
 if (condition){   // Bad - space missing before {.
 if(condition){    // Doubly bad.
 ```
 
-    if (condition) {  // Good - proper space after IF and before {.
+``` cpp
+if (condition) {  // Good - proper space after IF and before {.
+```
 
 Short conditional statements may be written on one line if this enhances
 readability. You may use this only when the line is brief and the
 statement does not use the `else` clause.
 
-    if (x == kFoo) return new Foo();
-    if (x == kBar) return new Bar();
+``` cpp
+if (x == kFoo) return new Foo();
+if (x == kBar) return new Bar();
+```
 
 This is not allowed when the if statement has an `else`:
 
-``` {.badcode}
+``` cpp
 // Not allowed - IF statement on one line when there is an ELSE clause
 if (x) DoThis();
 else DoThat();
@@ -4374,17 +4467,19 @@ with complex conditions or statements may be more readable with curly
 braces. Some projects require that an `if` must always have an
 accompanying brace.
 
-    if (condition)
-      DoSomething();  // 2 space indent.
+``` cpp
+if (condition)
+  DoSomething();  // 2 space indent.
 
-    if (condition) {
-      DoSomething();  // 2 space indent.
-    }
+if (condition) {
+  DoSomething();  // 2 space indent.
+}
+```
 
 However, if one part of an `if`-`else` statement uses curly braces, the
 other part must too:
 
-``` {.badcode}
+``` cpp
 // Not allowed - curly on IF but not ELSE
 if (condition) {
   foo;
@@ -4399,15 +4494,17 @@ else {
 }
 ```
 
-    // Curly braces around both IF and ELSE required because
-    // one of the clauses used braces.
-    if (condition) {
-      foo;
-    } else {
-      bar;
-    }
+``` cpp
+// Curly braces around both IF and ELSE required because
+// one of the clauses used braces.
+if (condition) {
+  foo;
+} else {
+  bar;
+}
+```
 
-### Loops and Switch Statements {#Loops_and_Switch_Statements}
+### Loops and Switch Statements
 
 Switch statements may use braces for blocks. Annotate non-trivial
 fall-through between cases. Braces are optional for single-statement
@@ -4424,19 +4521,21 @@ case should never execute, treat this as an error. For example:
 
 <div>
 
-    switch (var) {
-      case 0: {  // 2 space indent
-        ...      // 4 space indent
-        break;
-      }
-      case 1: {
-        ...
-        break;
-      }
-      default: {
-        assert(false);
-      }
-    }
+``` cpp
+switch (var) {
+  case 0: {  // 2 space indent
+    ...      // 4 space indent
+    break;
+  }
+  case 1: {
+    ...
+    break;
+  }
+  default: {
+    assert(false);
+  }
+}
+```
 
 </div>
 
@@ -4447,47 +4546,53 @@ where a fall-through to the next case label occurs. A common exception
 is consecutive case labels without intervening code, in which case no
 annotation is needed.
 
-    switch (x) {
-      case 41:  // No annotation needed here.
-      case 43:
-        if (dont_be_picky) {
-          // Use this instead of or along with annotations in comments.
-          ABSL_FALLTHROUGH_INTENDED;
-        } else {
-          CloseButNoCigar();
-          break;
-        }
-      case 42:
-        DoSomethingSpecial();
-        ABSL_FALLTHROUGH_INTENDED;
-      default:
-        DoSomethingGeneric();
-        break;
+``` cpp
+switch (x) {
+  case 41:  // No annotation needed here.
+  case 43:
+    if (dont_be_picky) {
+      // Use this instead of or along with annotations in comments.
+      ABSL_FALLTHROUGH_INTENDED;
+    } else {
+      CloseButNoCigar();
+      break;
     }
+  case 42:
+    DoSomethingSpecial();
+    ABSL_FALLTHROUGH_INTENDED;
+  default:
+    DoSomethingGeneric();
+    break;
+}
+```
 
 Braces are optional for single-statement loops.
 
-    for (int i = 0; i < kSomeNumber; ++i)
-      printf("I love you\n");
+``` cpp
+for (int i = 0; i < kSomeNumber; ++i)
+  printf("I love you\n");
 
-    for (int i = 0; i < kSomeNumber; ++i) {
-      printf("I take it back\n");
-    }
+for (int i = 0; i < kSomeNumber; ++i) {
+  printf("I take it back\n");
+}
+```
 
 Empty loop bodies should use either an empty pair of braces or
 `continue` with no braces, rather than a single semicolon.
 
-    while (condition) {
-      // Repeat test until it returns false.
-    }
-    for (int i = 0; i < kSomeNumber; ++i) {}  // Good - one newline is also OK.
-    while (condition) continue;  // Good - continue indicates no logic.
+``` cpp
+while (condition) {
+  // Repeat test until it returns false.
+}
+for (int i = 0; i < kSomeNumber; ++i) {}  // Good - one newline is also OK.
+while (condition) continue;  // Good - continue indicates no logic.
+```
 
-``` {.badcode}
+``` cpp
 while (condition);  // Bad - looks like part of do/while loop.
 ```
 
-### Pointer and Reference Expressions {#Pointer_and_Reference_Expressions}
+### Pointer and Reference Expressions
 
 No spaces around period or arrow. Pointer operators do not have trailing
 spaces.
@@ -4495,27 +4600,31 @@ spaces.
 The following are examples of correctly-formatted pointer and reference
 expressions:
 
-    x = *p;
-    p = &x;
-    x = r.y;
-    x = r->y;
+``` cpp
+x = *p;
+p = &x;
+x = r.y;
+x = r->y;
+```
 
 Note that:
 
--   There are no spaces around the period or arrow when accessing a
+  - There are no spaces around the period or arrow when accessing a
     member.
--   Pointer operators have no space after the `*` or `&`.
+  - Pointer operators have no space after the `*` or `&`.
 
 When declaring a pointer variable or argument, you may place the
 asterisk adjacent to either the type or to the variable name:
 
-    // These are fine, space preceding.
-    char *c;
-    const std::string &str;
+``` cpp
+// These are fine, space preceding.
+char *c;
+const std::string &str;
 
-    // These are fine, space following.
-    char* c;
-    const std::string& str;
+// These are fine, space following.
+char* c;
+const std::string& str;
+```
 
 You should do this consistently within a single file, so, when modifying
 an existing file, use the style in that file.
@@ -4524,16 +4633,18 @@ It is allowed (if unusual) to declare multiple variables in the same
 declaration, but it is disallowed if any of those have pointer or
 reference decorations. Such declarations are easily misread.
 
-    // Fine if helpful for readability.
-    int x, y;
+``` cpp
+// Fine if helpful for readability.
+int x, y;
+```
 
-``` {.badcode}
+``` cpp
 int x, *y;  // Disallowed - no & or * in multiple declaration
 char * c;  // Bad - spaces on both sides of *
 const std::string & str;  // Bad - spaces on both sides of &
 ```
 
-### Boolean Expressions {#Boolean_Expressions}
+### Boolean Expressions
 
 When you have a boolean expression that is longer than the [standard
 line length](#Line_Length), be consistent in how you break up the lines.
@@ -4541,11 +4652,13 @@ line length](#Line_Length), be consistent in how you break up the lines.
 In this example, the logical AND operator is always at the end of the
 lines:
 
-    if (this_one_thing > this_other_thing &&
-        a_third_thing == a_fourth_thing &&
-        yet_another && last_one) {
-      ...
-    }
+``` cpp
+if (this_one_thing > this_other_thing &&
+    a_third_thing == a_fourth_thing &&
+    yet_another && last_one) {
+  ...
+}
+```
 
 Note that when the code wraps in this example, both of the `&&` logical
 AND operators are at the end of the line. This is more common in Genrep
@@ -4556,36 +4669,40 @@ but be careful about overuse. Also note that you should always use the
 punctuation operators, such as `&&` and `~`, rather than the word
 operators, such as `and` and `compl`.
 
-### Return Values {#Return_Values}
+### Return Values
 
 Do not needlessly surround the `return` expression with parentheses.
 
-Use parentheses in `return expr;` only where you would use them in
-`x = expr;`.
+Use parentheses in `return expr;` only where you would use them in `x =
+expr;`.
 
-    return result;                  // No parentheses in the simple case.
-    // Parentheses OK to make a complex expression more readable.
-    return (some_long_condition &&
-            another_condition);
+``` cpp
+return result;                  // No parentheses in the simple case.
+// Parentheses OK to make a complex expression more readable.
+return (some_long_condition &&
+        another_condition);
+```
 
-``` {.badcode}
+``` cpp
 return (value);                // You wouldn't write var = (value);
 return(result);                // return is not a function!
 ```
 
-### Variable and Array Initialization {#Variable_and_Array_Initialization}
+### Variable and Array Initialization
 
 Your choice of `=`, `()`, or `{}`.
 
 You may choose between `=`, `()`, and `{}`; the following are all
 correct:
 
-    int x = 3;
-    int x(3);
-    int x{3};
-    std::string name = "Some Name";
-    std::string name("Some Name");
-    std::string name{"Some Name"};
+``` cpp
+int x = 3;
+int x(3);
+int x{3};
+std::string name = "Some Name";
+std::string name("Some Name");
+std::string name{"Some Name"};
+```
 
 Be careful when using a braced initialization list `{...}` on a type
 with an `std::initializer_list` constructor. A nonempty
@@ -4595,16 +4712,20 @@ call a default constructor if available. To force the
 non-`std::initializer_list` constructor, use parentheses instead of
 braces.
 
-    std::vector<int> v(100, 1);  // A vector containing 100 items: All 1s.
-    std::vector<int> v{100, 1};  // A vector containing 2 items: 100 and 1.
+``` cpp
+std::vector<int> v(100, 1);  // A vector containing 100 items: All 1s.
+std::vector<int> v{100, 1};  // A vector containing 2 items: 100 and 1.
+```
 
 Also, the brace form prevents narrowing of integral types. This can
 prevent some types of programming errors.
 
-    int pi(3.14);  // OK -- pi == 3.
-    int pi{3.14};  // Compile error: narrowing conversion.
+``` cpp
+int pi(3.14);  // OK -- pi == 3.
+int pi{3.14};  // Compile error: narrowing conversion.
+```
 
-### Preprocessor Directives {#Preprocessor_Directives}
+### Preprocessor Directives
 
 The hash mark that starts a preprocessor directive should always be at
 the beginning of the line.
@@ -4612,18 +4733,20 @@ the beginning of the line.
 Even when preprocessor directives are within the body of indented code,
 the directives should start at the beginning of the line.
 
-    // Good - directives at beginning of line
-      if (lopsided_score) {
-    #if DISASTER_PENDING      // Correct -- Starts at beginning of line
-        DropEverything();
-    # if NOTIFY               // OK but not required -- Spaces after #
-        NotifyClient();
-    # endif
-    #endif
-        BackToNormal();
-      }
+``` cpp
+// Good - directives at beginning of line
+  if (lopsided_score) {
+#if DISASTER_PENDING      // Correct -- Starts at beginning of line
+    DropEverything();
+# if NOTIFY               // OK but not required -- Spaces after #
+    NotifyClient();
+# endif
+#endif
+    BackToNormal();
+  }
+```
 
-``` {.badcode}
+``` cpp
 // Bad - indented directives
   if (lopsided_score) {
     #if DISASTER_PENDING  // Wrong!  The "#if" should be at beginning of line
@@ -4633,7 +4756,7 @@ the directives should start at the beginning of the line.
   }
 ```
 
-### Class Format {#Class_Format}
+### Class Format
 
 Sections in `public`, `protected` and `private` order, each indented one
 space.
@@ -4642,90 +4765,96 @@ The basic format for a class definition (lacking the comments, see
 [Class Comments](#Class_Comments) for a discussion of what comments are
 needed) is:
 
-    class MyClass : public OtherClass {
-     public:      // Note the 1 space indent!
-      MyClass();  // Regular 2 space indent.
-      explicit MyClass(int var);
-      ~MyClass() {}
+``` cpp
+class MyClass : public OtherClass {
+ public:      // Note the 1 space indent!
+  MyClass();  // Regular 2 space indent.
+  explicit MyClass(int var);
+  ~MyClass() {}
 
-      void SomeFunction();
-      void SomeFunctionThatDoesNothing() {
-      }
+  void SomeFunction();
+  void SomeFunctionThatDoesNothing() {
+  }
 
-      void set_some_var(int var) { some_var_ = var; }
-      int some_var() const { return some_var_; }
+  void set_some_var(int var) { some_var_ = var; }
+  int some_var() const { return some_var_; }
 
-     private:
-      bool SomeInternalFunction();
+ private:
+  bool SomeInternalFunction();
 
-      int some_var_;
-      int some_other_var_;
-    };
+  int some_var_;
+  int some_other_var_;
+};
+```
 
 Things to note:
 
--   Any base class name should be on the same line as the subclass name,
+  - Any base class name should be on the same line as the subclass name,
     subject to the 80-column limit.
--   The `public:`, `protected:`, and `private:` keywords should be
+  - The `public:`, `protected:`, and `private:` keywords should be
     indented one space.
--   Except for the first instance, these keywords should be preceded by
+  - Except for the first instance, these keywords should be preceded by
     a blank line. This rule is optional in small classes.
--   Do not leave a blank line after these keywords.
--   The `public` section should be first, followed by the `protected`
+  - Do not leave a blank line after these keywords.
+  - The `public` section should be first, followed by the `protected`
     and finally the `private` section.
--   See [Declaration Order](#Declaration_Order) for rules on ordering
+  - See [Declaration Order](#Declaration_Order) for rules on ordering
     declarations within each of these sections.
 
-### Constructor Initializer Lists {#Constructor_Initializer_Lists}
+### Constructor Initializer Lists
 
 Constructor initializer lists can be all on one line or with subsequent
 lines indented four spaces.
 
 The acceptable formats for initializer lists are:
 
-    // When everything fits on one line:
-    MyClass::MyClass(int var) : some_var_(var) {
-      DoSomething();
-    }
+``` cpp
+// When everything fits on one line:
+MyClass::MyClass(int var) : some_var_(var) {
+  DoSomething();
+}
 
-    // If the signature and initializer list are not all on one line,
-    // you must wrap before the colon and indent 4 spaces:
-    MyClass::MyClass(int var)
-        : some_var_(var), some_other_var_(var + 1) {
-      DoSomething();
-    }
+// If the signature and initializer list are not all on one line,
+// you must wrap before the colon and indent 4 spaces:
+MyClass::MyClass(int var)
+    : some_var_(var), some_other_var_(var + 1) {
+  DoSomething();
+}
 
-    // When the list spans multiple lines, put each member on its own line
-    // and align them:
-    MyClass::MyClass(int var)
-        : some_var_(var),             // 4 space indent
-          some_other_var_(var + 1) {  // lined up
-      DoSomething();
-    }
+// When the list spans multiple lines, put each member on its own line
+// and align them:
+MyClass::MyClass(int var)
+    : some_var_(var),             // 4 space indent
+      some_other_var_(var + 1) {  // lined up
+  DoSomething();
+}
 
-    // As with any other code block, the close curly can be on the same
-    // line as the open curly, if it fits.
-    MyClass::MyClass(int var)
-        : some_var_(var) {}
+// As with any other code block, the close curly can be on the same
+// line as the open curly, if it fits.
+MyClass::MyClass(int var)
+    : some_var_(var) {}
+```
 
-### Namespace Formatting {#Namespace_Formatting}
+### Namespace Formatting
 
 The contents of namespaces are not indented.
 
 [Namespaces](#Namespaces) do not add an extra level of indentation. For
 example, use:
 
-    namespace {
+``` cpp
+namespace {
 
-    void foo() {  // Correct.  No extra indentation within namespace.
-      ...
-    }
+void foo() {  // Correct.  No extra indentation within namespace.
+  ...
+}
 
-    }  // namespace
+}  // namespace
+```
 
 Do not indent within a namespace:
 
-``` {.badcode}
+``` cpp
 namespace {
 
   // Wrong!  Indented when it should not be.
@@ -4736,101 +4865,109 @@ namespace {
 }  // namespace
 ```
 
-### Horizontal Whitespace {#Horizontal_Whitespace}
+### Horizontal Whitespace
 
 Use of horizontal whitespace depends on location. Never put trailing
 whitespace at the end of a line.
 
 #### General
 
-    void f(bool b) {  // Open braces should always have a space before them.
-      ...
-    int i = 0;  // Semicolons usually have no space before them.
-    // Spaces inside braces for braced-init-list are optional.  If you use them,
-    // put them on both sides!
-    int x[] = { 0 };
-    int x[] = {0};
+``` cpp
+void f(bool b) {  // Open braces should always have a space before them.
+  ...
+int i = 0;  // Semicolons usually have no space before them.
+// Spaces inside braces for braced-init-list are optional.  If you use them,
+// put them on both sides!
+int x[] = { 0 };
+int x[] = {0};
 
-    // Spaces around the colon in inheritance and initializer lists.
-    class Foo : public Bar {
-     public:
-      // For inline function implementations, put spaces between the braces
-      // and the implementation itself.
-      Foo(int b) : Bar(), baz_(b) {}  // No spaces inside empty braces.
-      void Reset() { baz_ = 0; }  // Spaces separating braces from implementation.
-      ...
+// Spaces around the colon in inheritance and initializer lists.
+class Foo : public Bar {
+ public:
+  // For inline function implementations, put spaces between the braces
+  // and the implementation itself.
+  Foo(int b) : Bar(), baz_(b) {}  // No spaces inside empty braces.
+  void Reset() { baz_ = 0; }  // Spaces separating braces from implementation.
+  ...
+```
 
 Adding trailing whitespace can cause extra work for others editing the
 same file, when they merge, as can removing existing trailing
-whitespace. So: Don\'t introduce trailing whitespace. Remove it if
-you\'re already changing that line, or do it in a separate clean-up
-operation (preferably when no-one else is working on the file).
+whitespace. So: Don't introduce trailing whitespace. Remove it if you're
+already changing that line, or do it in a separate clean-up operation
+(preferably when no-one else is working on the file).
 
 #### Loops and Conditionals
 
-    if (b) {          // Space after the keyword in conditions and loops.
-    } else {          // Spaces around else.
-    }
-    while (test) {}   // There is usually no space inside parentheses.
-    switch (i) {
-    for (int i = 0; i < 5; ++i) {
-    // Loops and conditions may have spaces inside parentheses, but this
-    // is rare.  Be consistent.
-    switch ( i ) {
-    if ( test ) {
-    for ( int i = 0; i < 5; ++i ) {
-    // For loops always have a space after the semicolon.  They may have a space
-    // before the semicolon, but this is rare.
-    for ( ; i < 5 ; ++i) {
-      ...
+``` cpp
+if (b) {          // Space after the keyword in conditions and loops.
+} else {          // Spaces around else.
+}
+while (test) {}   // There is usually no space inside parentheses.
+switch (i) {
+for (int i = 0; i < 5; ++i) {
+// Loops and conditions may have spaces inside parentheses, but this
+// is rare.  Be consistent.
+switch ( i ) {
+if ( test ) {
+for ( int i = 0; i < 5; ++i ) {
+// For loops always have a space after the semicolon.  They may have a space
+// before the semicolon, but this is rare.
+for ( ; i < 5 ; ++i) {
+  ...
 
-    // Range-based for loops always have a space before and after the colon.
-    for (auto x : counts) {
-      ...
-    }
-    switch (i) {
-      case 1:         // No space before colon in a switch case.
-        ...
-      case 2: break;  // Use a space after a colon if there's code after it.
+// Range-based for loops always have a space before and after the colon.
+for (auto x : counts) {
+  ...
+}
+switch (i) {
+  case 1:         // No space before colon in a switch case.
+    ...
+  case 2: break;  // Use a space after a colon if there's code after it.
+```
 
 #### Operators
 
-    // Assignment operators always have spaces around them.
-    x = 0;
+``` cpp
+// Assignment operators always have spaces around them.
+x = 0;
 
-    // Other binary operators usually have spaces around them, but it's
-    // OK to remove spaces around factors.  Parentheses should have no
-    // internal padding.
-    v = w * x + y / z;
-    v = w*x + y/z;
-    v = w * (x + z);
+// Other binary operators usually have spaces around them, but it's
+// OK to remove spaces around factors.  Parentheses should have no
+// internal padding.
+v = w * x + y / z;
+v = w*x + y/z;
+v = w * (x + z);
 
-    // No spaces separating unary operators and their arguments.
-    x = -5;
-    ++x;
-    if (x && !y)
-      ...
+// No spaces separating unary operators and their arguments.
+x = -5;
+++x;
+if (x && !y)
+  ...
+```
 
 #### Templates and Casts
 
-    // No spaces inside the angle brackets (< and >), before
-    // <, or between >( in a cast
-    std::vector<std::string> x;
-    y = static_cast<char*>(x);
+``` cpp
+// No spaces inside the angle brackets (< and >), before
+// <, or between >( in a cast
+std::vector<std::string> x;
+y = static_cast<char*>(x);
 
-    // Spaces between type and pointer are OK, but be consistent.
-    std::vector<char *> x;
+// Spaces between type and pointer are OK, but be consistent.
+std::vector<char *> x;
+```
 
-### Vertical Whitespace {#Vertical_Whitespace}
+### Vertical Whitespace
 
 Minimize use of vertical whitespace.
 
-This is more a principle than a rule: don\'t use blank lines when you
-don\'t have to. In particular, don\'t put more than one or two blank
-lines between functions, resist starting functions with a blank line,
-don\'t end functions with a blank line, and be sparing with your use of
-blank lines. A blank line within a block of code serves like a paragraph
-break in prose: visually separating two thoughts.
+This is more a principle than a rule: don't use blank lines when you
+don't have to. In particular, don't put more than one or two blank lines
+between functions, resist starting functions with a blank line, don't
+end functions with a blank line, and be sparing with your use of blank
+lines. A blank line within a block of code serves like a paragraph break
+in prose: visually separating two thoughts.
 
 The basic principle is: The more code that fits on one screen, the
 easier it is to follow and understand the control flow of the program.
@@ -4838,31 +4975,30 @@ Use whitespace purposefully to provide separation in that flow.
 
 Some rules of thumb to help when blank lines may be useful:
 
--   Blank lines at the beginning or end of a function do not help
+  - Blank lines at the beginning or end of a function do not help
     readability.
--   Blank lines inside a chain of if-else blocks may well help
+  - Blank lines inside a chain of if-else blocks may well help
     readability.
--   A blank line before a comment line usually helps readability --- the
+  - A blank line before a comment line usually helps readability — the
     introduction of a new comment suggests the start of a new thought,
     and the blank line makes it clear that the comment goes with the
     following thing instead of the preceding.
--   Blank lines immediately inside a declaration of a namespace or block
+  - Blank lines immediately inside a declaration of a namespace or block
     of namespaces may help readability by visually separating the
     load-bearing content from the (largely non-semantic) organizational
     wrapper. Especially when the first declaration inside the
     namespace(s) is preceded by a comment, this becomes a special case
-    of the previous rule, helping the comment to \"attach\" to the
+    of the previous rule, helping the comment to "attach" to the
     subsequent declaration.
 
-Exceptions to the Rules {#Exceptions_to_the_Rules}
------------------------
+## Exceptions to the Rules
 
 The coding conventions described above are mandatory. However, like all
 good rules, these sometimes have exceptions, which we discuss here.
 
 <div>
 
-### Existing Non-conformant Code {#Existing_Non-conformant_Code}
+### Existing Non-conformant Code
 
 You may diverge from the rules when dealing with code that does not
 conform to this style guide.
@@ -4876,7 +5012,7 @@ author or the person currently responsible for the code. Remember that
 
 </div>
 
-### Windows Code {#Windows_Code}
+### Windows Code
 
 Windows programmers have developed their own set of coding conventions,
 mainly derived from the conventions in Windows headers and other
@@ -4887,20 +5023,20 @@ any platform.
 It is worth reiterating a few of the guidelines that you might forget if
 you are used to the prevalent Windows style:
 
--   Do not use Hungarian notation (for example, naming an integer
+  - Do not use Hungarian notation (for example, naming an integer
     `iNum`). Use the Genrep naming conventions, including the `.cc`
     extension for source files.
--   Windows defines many of its own synonyms for primitive types, such
+  - Windows defines many of its own synonyms for primitive types, such
     as `DWORD`, `HANDLE`, etc. It is perfectly acceptable, and
     encouraged, that you use these types when calling Windows API
     functions. Even so, keep as close as you can to the underlying C++
     types. For example, use `const TCHAR *` instead of `LPCTSTR`.
--   When compiling with Microsoft Visual C++, set the compiler to
+  - When compiling with Microsoft Visual C++, set the compiler to
     warning level 3 or higher, and treat all warnings as errors.
--   Do not use `#pragma once`; instead use the standard Genrep include
+  - Do not use `#pragma once`; instead use the standard Genrep include
     guards. The path in the include guards should be relative to the top
     of your project tree.
--   In fact, do not use any nonstandard extensions, like `#pragma` and
+  - In fact, do not use any nonstandard extensions, like `#pragma` and
     `__declspec`, unless you absolutely must. Using
     `__declspec(dllimport)` and `__declspec(dllexport)` is allowed;
     however, you must use them through macros such as `DLLIMPORT` and
@@ -4910,12 +5046,12 @@ you are used to the prevalent Windows style:
 However, there are just a few rules that we occasionally need to break
 on Windows:
 
--   Normally we [strongly discourage the use of multiple implementation
+  - Normally we [strongly discourage the use of multiple implementation
     inheritance](#Multiple_Inheritance); however, it is required when
     using COM and some ATL/WTL classes. You may use multiple
     implementation inheritance to implement COM or ATL/WTL classes and
     interfaces.
--   Although you should not use exceptions in your own code, they are
+  - Although you should not use exceptions in your own code, they are
     used extensively in the ATL and some STLs, including the one that
     comes with Visual C++. When using the ATL, you should define
     `_ATL_NO_EXCEPTIONS` to disable exceptions. You should investigate
@@ -4923,17 +5059,16 @@ on Windows:
     is OK to turn on exceptions in the compiler. (Note that this is only
     to get the STL to compile. You should still not write exception
     handling code yourself.)
--   The usual way of working with precompiled headers is to include a
+  - The usual way of working with precompiled headers is to include a
     header file at the top of each source file, typically with a name
     like `StdAfx.h` or `precompile.h`. To make your code easier to share
     with other projects, avoid including this file explicitly (except in
     `precompile.cc`), and use the `/FI` compiler option to include the
     file automatically.
--   Resource headers, which are usually named `resource.h` and contain
+  - Resource headers, which are usually named `resource.h` and contain
     only macros, do not need to conform to these style guidelines.
 
-Parting Words {#Parting_Words}
--------------
+## Parting Words
 
 Use common sense and *BE CONSISTENT*.
 
@@ -4952,7 +5087,6 @@ discontinuity throws readers out of their rhythm when they go to read
 it. Try to avoid this.
 
 OK, enough writing about writing code; the code itself is much more
-interesting. Have fun!
+interesting. Have fun\!
 
-------------------------------------------------------------------------
-:::
+-----
