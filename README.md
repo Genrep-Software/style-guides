@@ -9,4 +9,5 @@ Currently, the languages with internal style guides are:
 
 - [C++](https://github.com/Genrep-Software/style-guides/blob/master/c++/cppguide.md)
 
-
+Style guide folders each contain a `Makefile` to generate a well-formatted PDF.
+To use, simply `cd` into the respective directory and call `make`.

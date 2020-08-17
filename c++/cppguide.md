@@ -1,3 +1,9 @@
+---
+title: Genrep C++ Style Guide
+author: Genrep Software, LLC.
+date: "Last updated: August 17, 2020"
+...
+
 # Genrep C++ Style Guide
 
 ## Background

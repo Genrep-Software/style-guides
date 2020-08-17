@@ -1,3 +1,9 @@
 # Vim swap files
 *.swp
 *.swo
+
+# LaTeX junk
+*.aux
+*.log
+*.out
+*.toc
