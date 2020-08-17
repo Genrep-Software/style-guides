@@ -2,6 +2,11 @@
 
 ## Background
 
+This guide is originally copied from the [Google C++ Style
+Guide](https://google.github.io/styleguide/cppguide.html). It was downloaded
+and converted to Markdown format with Pandoc, and has since been modified to
+suit Genrep software development needs.
+
 C++ is one of the main development languages used by many of Genrep's
 open-source projects. As every C++ programmer knows, the language has
 many powerful features, but this power brings with it complexity, which
