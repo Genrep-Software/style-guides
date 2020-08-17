@@ -1,5 +1,5 @@
 ::: {#content}
-Google C++ Style Guide
+Genrep C++ Style Guide
 ======================
 
 ::: {#tocDiv .horizontal_toc}
@@ -8,7 +8,7 @@ Google C++ Style Guide
 Background {#Background .ignoreLink}
 ----------
 
-C++ is one of the main development languages used by many of Google\'s
+C++ is one of the main development languages used by many of Genrep\'s
 open-source projects. As every C++ programmer knows, the language has
 many powerful features, but this power brings with it complexity, which
 in turn can make code more bug-prone and harder to read and maintain.
@@ -22,7 +22,7 @@ language features productively.
 govern our C++ code. The term Style is a bit of a misnomer, since these
 conventions cover far more than just source file formatting.
 
-Most open-source projects developed by Google conform to the
+Most open-source projects developed by Genrep conform to the
 requirements in this guide.
 
 Note that this guide is not a C++ tutorial: we assume that the reader is
@@ -129,7 +129,7 @@ Concede to optimization when necessary
 The intent of this document is to provide maximal guidance with
 reasonable restriction. As always, common sense and good taste should
 prevail. By this we specifically refer to the established conventions of
-the entire Google C++ community, not just your personal preferences or
+the entire Genrep C++ community, not just your personal preferences or
 those of your team. Be skeptical about and reluctant to use clever or
 unusual constructs: the absence of a prohibition is not the same as a
 license to proceed. Use your judgment, and if you are unsure, please
@@ -4548,7 +4548,7 @@ lines:
     }
 
 Note that when the code wraps in this example, both of the `&&` logical
-AND operators are at the end of the line. This is more common in Google
+AND operators are at the end of the line. This is more common in Genrep
 code, though wrapping all operators at the beginning of the line is also
 allowed. Feel free to insert extra parentheses judiciously because they
 can be very helpful in increasing readability when used appropriately,
@@ -4888,7 +4888,7 @@ It is worth reiterating a few of the guidelines that you might forget if
 you are used to the prevalent Windows style:
 
 -   Do not use Hungarian notation (for example, naming an integer
-    `iNum`). Use the Google naming conventions, including the `.cc`
+    `iNum`). Use the Genrep naming conventions, including the `.cc`
     extension for source files.
 -   Windows defines many of its own synonyms for primitive types, such
     as `DWORD`, `HANDLE`, etc. It is perfectly acceptable, and
@@ -4897,7 +4897,7 @@ you are used to the prevalent Windows style:
     types. For example, use `const TCHAR *` instead of `LPCTSTR`.
 -   When compiling with Microsoft Visual C++, set the compiler to
     warning level 3 or higher, and treat all warnings as errors.
--   Do not use `#pragma once`; instead use the standard Google include
+-   Do not use `#pragma once`; instead use the standard Genrep include
     guards. The path in the include guards should be relative to the top
     of your project tree.
 -   In fact, do not use any nonstandard extensions, like `#pragma` and
