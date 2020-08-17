@@ -416,7 +416,7 @@ the prefix.
 Inline namespaces automatically place their names in the enclosing
 scope. Consider the following snippet, for example:
 
-``` neutralcode
+``` cpp
 namespace outer {
 inline namespace inner {
   void foo();
@@ -755,7 +755,7 @@ Initialization is a more complex topic. This is because we must not only
 consider whether class constructors execute, but we must also consider
 the evaluation of the initializer:
 
-``` neutralcode
+``` cpp
 int n = 5;    // fine
 int m = f();  // ? (depends on f)
 Foo x;        // ? (depends on Foo::Foo)
@@ -2538,7 +2538,7 @@ code:
     with the same initializer (so long as you don't use curly braces
     instead of parentheses).
 
-    ``` neutralcode
+    ``` cpp
     auto a = 42;  // a is an int
     auto& b = a;  // b is an int&
     auto c = b;   // c is an int
@@ -2560,7 +2560,7 @@ code:
     `return` statements in the function body, following the same rules
     as for variable declarations:
 
-    ``` neutralcode
+    ``` cpp
     auto f() { return 0; }  // The return type of f is int
     ```
 
@@ -2578,7 +2578,7 @@ code:
     to be a function template instead of an ordinary function, with a
     separate template parameter for each `auto` function parameter:
 
-    ``` neutralcode
+    ``` cpp
     // Sort `vec` in decreasing order
     std::sort(vec.begin(), vec.end(), [](auto lhs, auto rhs) { return lhs > rhs; });
     ```
@@ -2589,7 +2589,7 @@ code:
     declare wholly new variables rather than only capturing existing
     ones:
 
-    ``` neutralcode
+    ``` cpp
     [x = 42, y = "foo"] { ... }  // x is an int, and y is a const char*
     ```
 
@@ -2609,7 +2609,7 @@ code:
     syntax provides no way of specifying the type of either the
     enclosing object or the individual names:
 
-    ``` neutralcode
+    ``` cpp
     auto [iter, success] = my_map.insert({key, value});
     if (!success) {
       iter->second = value;
@@ -2681,7 +2681,7 @@ For local variables, you can use type deduction to make the code clearer
 by eliminating type information that is obvious or irrelevant, so that
 the reader can focus on the meaningful parts of the code:
 
-``` neutralcode
+``` cpp
 std::unique_ptr<WidgetWithBellsAndWhistles> widget_ptr =
     absl::make_unique<WidgetWithBellsAndWhistles>(arg1, arg2);
 absl::flat_hash_map<std::string,
@@ -2690,7 +2690,7 @@ absl::flat_hash_map<std::string,
 std::array<int, 6> numbers = {4, 8, 15, 16, 23, 42};
 ```
 
-``` goodcode
+``` cpp
 auto widget_ptr = absl::make_unique<WidgetWithBellsAndWhistles>(arg1, arg2);
 auto it = my_map_.find(key);
 std::array numbers = {4, 8, 15, 16, 23, 42};
@@ -2703,7 +2703,7 @@ aren't relevant, but the type of the values is probably useful. In such
 situations, it's often possible to define local variables with explicit
 types that convey the relevant information:
 
-``` goodcode
+``` cpp
 auto it = my_map_.find(key);
 if (it != my_map_.end()) {
   WidgetWithBellsAndWhistles& widget = *it->second;
@@ -2785,7 +2785,7 @@ deduction](https://en.cppreference.com/w/cpp/language/class_template_argument_de
 type that names a template, and the template argument list is not
 provided (not even empty angle brackets):
 
-``` neutralcode
+``` cpp
 std::array a = {1, 2, 3};  // `a` is a std::array<int, 3>
 ```
 
@@ -2797,7 +2797,7 @@ return types, except that there's no leading `auto`, and the function
 name is the name of the template. For example, the above example relies
 on this deduction guide for `std::array`:
 
-``` neutralcode
+``` cpp
 namespace std {
 template <class T, class... U>
 array(T, U...) -> std::array<T, 1 + sizeof...(U)>;
@@ -2846,7 +2846,7 @@ initializers](https://en.cppreference.com/w/cpp/language/aggregate_initializatio
 are a syntax that allows for initializing an aggregate ("plain old
 struct") by naming its fields explicitly:
 
-``` neutralcode
+``` cpp
   struct Point {
     float x = 0.0;
     float y = 0.0;
@@ -2941,7 +2941,7 @@ captures") need not actually "capture" anything from the enclosing
 scope, or even have a name from the enclosing scope; this syntax is a
 fully general way to define members of a lambda object:
 
-``` neutralcode
+``` cpp
 [foo = std::vector<int>({1, 2, 3})] () {
   ...
 }
@@ -4291,7 +4291,7 @@ long double ld = -.5L;
 double d = 1248e6;
 ```
 
-``` goodcode
+``` cpp
 float f = 1.0f;
 float f2 = 1;   // Also OK
 long double ld = -0.5L;
